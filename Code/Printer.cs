@@ -29,9 +29,9 @@ namespace TasTrack
             Console.Clear();
             Console.WriteLine(title);
             Console.WriteLine("\n");
-            if (Login.isLoggedIn == "y")
+            if (GlobalVar.isLoggedIn == "y")
             {
-                Console.WriteLine("User: " + Login.displayName);
+                Console.WriteLine("User: " + GlobalVar.displayName);
             }
             if (oopsyDesc != null)
             {

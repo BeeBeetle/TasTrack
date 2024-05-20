@@ -12,28 +12,39 @@ namespace TasTrack
         public MainMenu()
         {
             Printer menuPrinter = new Printer();
-
-            menuPrinter.menuText = "1: Calendar\n2: View Tasks\n3: Add A Task\n4: Remove A Task\n5: Logout";
-            menuPrinter.Print();
-
-            try
+            menuPrinter.menuText = "1: Calendar\n2: View Tasks\n3: Add A Task\n4: Remove A Task\n5: Logout"; 
+            if (GlobalVar.errorNumber == 0)
             {
-                int select = Convert.ToInt32(Console.ReadLine());
-                switch (select)
-                {
-                    //case 1:
-
-                    case 5:
-                        Login.isLoggedIn = "n";
-                        Login.displayName = null;
-                        var start = new TT();
-                        start.Main();
-                        break;
-                }
+                menuPrinter.oopsyDesc = "Oops! Please select a valid option.";
             }
-            catch (Exception e1)
+            if (GlobalVar.errorNumber == 1)
             {
-                Console.WriteLine("Oops! Please select a valid option.\n");
+                menuPrinter.oopsyDesc = "That profile doesn't exist.";
+            }
+            if (GlobalVar.errorNumber == 2)
+            {
+                menuPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid.";
+            }
+            if (GlobalVar.errorNumber == 3)
+            {
+                menuPrinter.oopsyDesc = "Your passwords do not match. Please try again.";
+            }
+            menuPrinter.Print();
+            int select = Convert.ToInt32(Console.ReadLine());
+            switch (select)
+            {
+                //case 1:
+
+
+                case 5:
+                    GlobalVar.isLoggedIn = "n";
+                    GlobalVar.displayName = null;
+                    var start = new TT();
+                    start.Main();
+                    break;
+                default:
+                    GlobalVar.errorNumber = 0;
+                    break;
             }
         }
     }

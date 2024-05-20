@@ -13,12 +13,12 @@ public class TT
 {
     public void Main()
     {
-        while (Login.isLoggedIn == "n")
+        while (GlobalVar.isLoggedIn == "n")
         {
             var login = new Login();
             login.GetLogin();
         }
-        while (Login.isLoggedIn == "y")
+        while (GlobalVar.isLoggedIn == "y")
         {
             MainMenu menu = new MainMenu();
         }
