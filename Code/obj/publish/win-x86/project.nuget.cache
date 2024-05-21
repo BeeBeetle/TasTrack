@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "KJURpHN3ck+Fw1M0HQWExFVWTLH51URKeIUxxxiMhcEU6nGasr/Id7vqKeTwrH8a984LyfmV1cE/DVuOAREpTg==",
+  "success": true,
+  "projectFilePath": "D:\\programs\\TasTrack\\TasTrack.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\squev\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x86\\7.0.7\\microsoft.netcore.app.runtime.win-x86.7.0.7.nupkg.sha512",
+    "C:\\Users\\squev\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x86\\7.0.7\\microsoft.windowsdesktop.app.runtime.win-x86.7.0.7.nupkg.sha512",
+    "C:\\Users\\squev\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x86\\7.0.7\\microsoft.aspnetcore.app.runtime.win-x86.7.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
