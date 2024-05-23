@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using TasTrack;
 
-var start = new TT();
+var start = new MainLoop();
 start.Main();
 
-public class TT
+public class MainLoop
 {
     public void Main()
     {
@@ -17,14 +17,17 @@ public class TT
         {
             Directory.CreateDirectory(GlobalVar.profiles);
         }
-        while (GlobalVar.isLoggedIn == "n")
+        while (GlobalVar.isLoggedIn == false)
         {
             var login = new Login();
-            login.GetLogin();
         }
-        while (GlobalVar.isLoggedIn == "y")
+        while (GlobalVar.isLoggedIn == true && GlobalVar.calView == false)
         {
-            MainMenu menu = new MainMenu();
+            var menu = new MainMenu();
+        }
+        while (GlobalVar.calView == true)
+        {
+            var calendarPrinter = new CalendarMenu();
         }
     }
 }

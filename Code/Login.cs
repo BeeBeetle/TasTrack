@@ -11,7 +11,7 @@ namespace TasTrack
     public class Login
     {
         Printer loginPrinter = new Printer();
-        public void GetLogin()
+        public Login()
         {
             loginPrinter.menuText = "1: Login to profile\n2: Create new profile\n3: Exit";
             if (GlobalVar.errorNumber == 0) 
@@ -35,7 +35,8 @@ namespace TasTrack
                 loginPrinter.oopsyDesc = "Shit! Something broke, bad!";
             }
             string profiles = GlobalVar.profiles;
-            loginPrinter.Print();
+            loginPrinter.PrintTitle();
+            loginPrinter.PrintMenu();
             try
             {
                 GlobalVar.errorNumber = -1;
@@ -76,7 +77,7 @@ namespace TasTrack
                             }
                             if (SecretHasher.Verify(passwordInput, storedHash) == true)
                             {
-                                GlobalVar.isLoggedIn = "y";
+                                GlobalVar.isLoggedIn = true;
                             }
                             else
                             {
@@ -136,7 +137,7 @@ namespace TasTrack
                                     writer.WriteLine("P|/" + SecretHasher.Hash(newPasswordConfirm));
                                 }
                             }
-                            GlobalVar.isLoggedIn = "y";
+                            GlobalVar.isLoggedIn = true;
                         }
                         else
                         {
@@ -155,7 +156,7 @@ namespace TasTrack
             }
             catch
             {
-                GlobalVar.errorNumber = 0;
+                GlobalVar.errorNumber = 4;
             }
         }
     }

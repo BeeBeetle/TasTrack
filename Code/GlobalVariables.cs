@@ -11,8 +11,8 @@ namespace TasTrack
     {
         //Below are a list of variables I need for the login page
         //All of these can be used outside this class as well using the public var
-        private static string loginStatus = "n";
-        public static string isLoggedIn
+        private static bool loginStatus = false;
+        public static bool isLoggedIn
         {
             //Tracks when a user is logged in as y or n to determine if
             //they should move from the login page to the main menu
@@ -44,5 +44,14 @@ namespace TasTrack
             get { return userError; }
             set { userError = value; }
         }
+        private static bool isCalendar = false;
+        public static bool calView
+        {
+            //This tracks the errors for the login page, there are only 3
+            get { return isCalendar; }
+            set { isCalendar = value; }
+        }
+        public string date = DateTime.Now.ToString();//The date and time right NOW
+        public static string[] dateArray = DateTime.Now.ToString("D").Replace(", ", ",").Split(",");//Make the date an array of just month, dd for display purposes
     }
 }

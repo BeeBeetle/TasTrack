@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace TasTrack
         public string oopsyDesc;
         public string menuText;
         public string optionChoice;
+        public string mainMenuSum;
         public Printer() 
         {
             title = "\n _____ ___   _____ ___________  ___  _____  _   __" +
@@ -23,13 +25,14 @@ namespace TasTrack
             optionChoice = "Select one of the options above by entering its number: ";
             oopsyDesc = null;
             menuText = null;
+            mainMenuSum = null;
         }
-        public void Print()
+        public void PrintTitle()
         {
             Console.Clear();
             Console.WriteLine(title);
             Console.WriteLine("\n");
-            if (GlobalVar.isLoggedIn == "y")
+            if (GlobalVar.isLoggedIn == true)
             {
                 Console.WriteLine("User: " + GlobalVar.displayName);
             }
@@ -39,6 +42,9 @@ namespace TasTrack
                 Console.WriteLine(oopsyDesc);
                 Console.ResetColor();
             }
+        }
+        public void PrintMenu()
+        {
             Console.WriteLine();
             Console.WriteLine(menuText);
             Console.WriteLine();
