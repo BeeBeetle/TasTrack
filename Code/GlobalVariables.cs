@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,8 @@ namespace TasTrack
             get { return tempPath; }
             set { tempPath = value; }
         }
+        public static string dir = AppContext.BaseDirectory;
+        public static string profiles = dir + @"profiles\";
         private static int userError = -1;
         public static int errorNumber
         {

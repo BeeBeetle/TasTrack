@@ -13,6 +13,10 @@ public class TT
 {
     public void Main()
     {
+        if (!Directory.Exists(GlobalVar.profiles))
+        {
+            Directory.CreateDirectory(GlobalVar.profiles);
+        }
         while (GlobalVar.isLoggedIn == "n")
         {
             var login = new Login();

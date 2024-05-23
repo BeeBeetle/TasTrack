@@ -1,0 +1,5 @@
+D:\programs\TasTrack\bin\Release\net7.0\publish\TasTrack.exe
+D:\programs\TasTrack\bin\Release\net7.0\publish\TasTrack.dll
+D:\programs\TasTrack\bin\Release\net7.0\publish\TasTrack.deps.json
+D:\programs\TasTrack\bin\Release\net7.0\publish\TasTrack.runtimeconfig.json
+D:\programs\TasTrack\bin\Release\net7.0\publish\TasTrack.pdb

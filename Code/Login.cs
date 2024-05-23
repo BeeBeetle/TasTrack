@@ -13,7 +13,6 @@ namespace TasTrack
         Printer loginPrinter = new Printer();
         public void GetLogin()
         {
-            string basePath = @"D:\programs\TasTrack\profiles\";
             loginPrinter.menuText = "1: Login to profile\n2: Create new profile\n3: Exit";
             if (GlobalVar.errorNumber == 0) 
             {
@@ -31,6 +30,11 @@ namespace TasTrack
             {
                 loginPrinter.oopsyDesc = "Your passwords do not match. Please try again.";
             }
+            if (GlobalVar.errorNumber == 4)
+            {
+                loginPrinter.oopsyDesc = "Shit! Something broke, bad!";
+            }
+            string profiles = GlobalVar.profiles;
             loginPrinter.Print();
             try
             {
@@ -42,7 +46,7 @@ namespace TasTrack
                         Console.Write("Name: ");
                         string usernameInput = Console.ReadLine();
                         GlobalVar.displayName = usernameInput;
-                        GlobalVar.filePath = basePath + usernameInput + "Profile.txt";
+                        GlobalVar.filePath = profiles + usernameInput + "Profile.txt";
                         string passwordInput = null;
                         string storedHash = null;
                         if (File.Exists(GlobalVar.filePath))
@@ -90,7 +94,7 @@ namespace TasTrack
                     case 2:
                         Console.Write("\nWhat is your name? ");
                         string newUsername = Console.ReadLine();
-                        GlobalVar.filePath = basePath + newUsername + "Profile.txt";
+                        GlobalVar.filePath = profiles + newUsername + "Profile.txt";
                         if (File.Exists(GlobalVar.filePath))
                         {
                             GlobalVar.errorNumber = 2;
@@ -129,9 +133,7 @@ namespace TasTrack
                                 using (StreamWriter writer = new StreamWriter(GlobalVar.filePath, true))
                                 {
                                     writer.WriteLine("U|/" + GlobalVar.displayName);
-                                    Console.WriteLine(GlobalVar.displayName);
                                     writer.WriteLine("P|/" + SecretHasher.Hash(newPasswordConfirm));
-                                    Console.WriteLine(newPasswordConfirm);
                                 }
                             }
                             GlobalVar.isLoggedIn = "y";

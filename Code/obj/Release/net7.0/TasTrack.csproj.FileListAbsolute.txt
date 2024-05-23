@@ -1,0 +1,15 @@
+D:\programs\TasTrack\bin\Release\net7.0\TasTrack.exe
+D:\programs\TasTrack\bin\Release\net7.0\TasTrack.deps.json
+D:\programs\TasTrack\bin\Release\net7.0\TasTrack.runtimeconfig.json
+D:\programs\TasTrack\bin\Release\net7.0\TasTrack.dll
+D:\programs\TasTrack\bin\Release\net7.0\TasTrack.pdb
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.csproj.AssemblyReference.cache
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.GeneratedMSBuildEditorConfig.editorconfig
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.AssemblyInfoInputs.cache
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.AssemblyInfo.cs
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.csproj.CoreCompileInputs.cache
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.dll
+D:\programs\TasTrack\obj\Release\net7.0\refint\TasTrack.dll
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.pdb
+D:\programs\TasTrack\obj\Release\net7.0\TasTrack.genruntimeconfig.cache
+D:\programs\TasTrack\obj\Release\net7.0\ref\TasTrack.dll
