@@ -10,6 +10,7 @@ namespace TasTrack
 {
     public class Login
     {
+        GlobalVar globalVar = new GlobalVar();
         Printer loginPrinter = new Printer();
         public Login()
         {
@@ -32,7 +33,7 @@ namespace TasTrack
             }
             if (GlobalVar.errorNumber == 4)
             {
-                loginPrinter.oopsyDesc = "Shit! Something broke, bad!";
+                loginPrinter.oopsyDesc = "You gotta use a number, not a letter!";
             }
             string profiles = GlobalVar.profiles;
             loginPrinter.PrintTitle();

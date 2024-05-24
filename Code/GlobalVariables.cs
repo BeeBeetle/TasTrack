@@ -53,5 +53,6 @@ namespace TasTrack
         }
         public string date = DateTime.Now.ToString();//The date and time right NOW
         public static string[] dateArray = DateTime.Now.ToString("D").Replace(", ", ",").Split(",");//Make the date an array of just month, dd for display purposes
+        public int screenWidth = Console.WindowWidth;
     }
 }

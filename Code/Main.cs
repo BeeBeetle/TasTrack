@@ -13,6 +13,7 @@ public class MainLoop
 {
     public void Main()
     {
+        GlobalVar globVar = new GlobalVar();
         if (!Directory.Exists(GlobalVar.profiles))
         {
             Directory.CreateDirectory(GlobalVar.profiles);

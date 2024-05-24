@@ -10,6 +10,7 @@ namespace TasTrack
 {
     internal class MainMenu
     {
+        GlobalVar globalVar = new GlobalVar();
         public MainMenu()
         {
             Printer menuPrinter = new Printer();
@@ -33,13 +34,14 @@ namespace TasTrack
             }
             if (GlobalVar.errorNumber == 4)
             {
-                menuPrinter.oopsyDesc = "Shit! Something broke, bad!";
+                menuPrinter.oopsyDesc = "You gotta use a number, not a letter!";
             }
             menuPrinter.PrintTitle();
             menuPrinter.PrintMenu();
-            int select = Convert.ToInt32(Console.ReadLine());
             try
             {
+                int select = Convert.ToInt32(Console.ReadLine());
+                GlobalVar.errorNumber = -1;
                 switch (select)
                 {
                     case 1:

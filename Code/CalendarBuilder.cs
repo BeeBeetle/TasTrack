@@ -10,8 +10,9 @@ namespace TasTrack
     {
         public string format(string column1, string column2)
         {
+            GlobalVar globalVar = new GlobalVar();
             int column1Width = 43;
-            int column2Width = 75; // I may try to find a way to make this dynamic based on the console's window size per user, no guarantees though
+            int column2Width = globalVar.screenWidth - (column1Width+1);
             int loopCount = 0;
             int movedChar = 0;
             int truncate = 0;
