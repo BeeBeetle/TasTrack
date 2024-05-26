@@ -4,3 +4,5 @@
  Current features:
  1. Log in
  2. Create user
+ 3. Open the main menu
+ 4. View a temporary calender and taks list placeholder
