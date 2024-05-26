@@ -48,7 +48,7 @@ namespace TasTrack
                         GlobalVar.calView = true;
                         break;
                     case 2:
-                        //TaskList;
+                        GlobalVar.taskList = true;
                         break;
                     case 3:
                         GlobalVar.isLoggedIn = false;

@@ -19,6 +19,7 @@ namespace TasTrack
             get { return loginStatus; }
             set { loginStatus = value; }
         }
+
         private static string activeUser = null;
         public static string displayName
         {
@@ -27,6 +28,7 @@ namespace TasTrack
             get { return activeUser; }
             set { activeUser = value; }
         }
+
         private static string tempPath = null;
         public static string filePath
         {
@@ -35,8 +37,10 @@ namespace TasTrack
             get { return tempPath; }
             set { tempPath = value; }
         }
+
         public static string dir = AppContext.BaseDirectory;
         public static string profiles = dir + @"profiles\";
+
         private static int userError = -1;
         public static int errorNumber
         {
@@ -44,15 +48,28 @@ namespace TasTrack
             get { return userError; }
             set { userError = value; }
         }
+
         private static bool isCalendar = false;
         public static bool calView
         {
-            //This tracks the errors for the login page, there are only 3
+            //Lets us which menu we are on, this one is for the calendar menu
             get { return isCalendar; }
             set { isCalendar = value; }
         }
+
         public string date = DateTime.Now.ToString();//The date and time right NOW
-        public static string[] dateArray = DateTime.Now.ToString("D").Replace(", ", ",").Split(",");//Make the date an array of just month, dd for display purposes
-        public int screenWidth = Console.WindowWidth;
+        public int monthListNum = DateTime.Now.Month - 1;//Used to pull the month from an indexed list so 0 is January
+        public string[] dateArray = DateTime.Now.ToString("D").Replace(", ", ",").Split(",");//Make the date an array to get just month, dd for display purposes
+        public string[] dayNumber = DateTime.Now.ToString("D").Replace(", ", " ").Split(" ");
+
+        public int screenWidth = Console.WindowWidth;//Listed as a number of columns, each column is the width of one constant width character
+
+        private static bool isTaskList = false;
+        public static bool taskList
+        {
+            //Lets us track what menu we are on, this one is for the Task Menu
+            get { return isTaskList; }
+            set { isTaskList = value; }
+        }
     }
 }

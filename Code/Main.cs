@@ -22,13 +22,17 @@ public class MainLoop
         {
             var login = new Login();
         }
-        while (GlobalVar.isLoggedIn == true && GlobalVar.calView == false)
+        while (GlobalVar.isLoggedIn == true && GlobalVar.calView == false && GlobalVar.taskList == false)
         {
             var menu = new MainMenu();
         }
         while (GlobalVar.calView == true)
         {
             var calendarPrinter = new CalendarMenu();
+        }
+        while (GlobalVar.taskList == true)
+        {// change this later to be TaskList once class is complete
+            var menu = new MainMenu();
         }
     }
 }
