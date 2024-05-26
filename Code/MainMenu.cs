@@ -33,6 +33,7 @@ namespace TasTrack
             int select = Convert.ToInt32(Console.ReadLine());
             switch (select)
             {
+<<<<<<< Updated upstream
                 //case 1:
 
 
@@ -45,6 +46,38 @@ namespace TasTrack
                 default:
                     GlobalVar.errorNumber = 0;
                     break;
+=======
+                menuPrinter.oopsyDesc = "You gotta use a number, not a letter!";
+            }
+            menuPrinter.PrintTitle();
+            menuPrinter.PrintMenu();
+            try
+            {
+                int select = Convert.ToInt32(Console.ReadLine());
+                GlobalVar.errorNumber = -1;
+                switch (select)
+                {
+                    case 1:
+                        GlobalVar.calView = true;
+                        break;
+                    case 2:
+                        GlobalVar.taskList = true;
+                        break;
+                    case 3:
+                        GlobalVar.isLoggedIn = false;
+                        GlobalVar.displayName = null;
+                        var start = new MainLoop();
+                        start.Main();
+                        break;
+                    default:
+                        GlobalVar.errorNumber = 0;
+                        break;
+                }
+            }
+            catch
+            {
+                GlobalVar.errorNumber = 4;
+>>>>>>> Stashed changes
             }
         }
     }
