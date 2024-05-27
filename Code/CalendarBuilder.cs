@@ -32,11 +32,7 @@ namespace TasTrack
             List<int> forbidRow = new List<int> {0, 2, 4, 16};
             DateTime now = DateTime.Now;
             var startDate = new DateTime(now.Year, now.Month, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
-            int todayVal = Convert.ToInt32(globalVar.dayNumber[2]);
-            string todayNum = globalVar.dayNumber[2];
-            char[] todayArray = todayNum.ToCharArray();
-            string todayStr = globalVar.dayNumber[0];
-            string month = globalVar.dayNumber[1];
+            int daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
             string year = globalVar.dayNumber[3];
             string numTasks = Convert.ToString(00); // Takes the number of tasks for each day and puts it on the calendar
             string[] monthSelect = { "░░░░░░ January ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ February ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ March ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ April ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░░ May ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ June ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ July ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░ August ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ September ░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░ October ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ November ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ December ░░░░░░░░░░░░ " + year + " ░░░░░░░░" };
@@ -59,6 +55,9 @@ namespace TasTrack
             char extTBeamLR = '╣';
             char spacer = '░';
             int rows = 0; // Just how many rows have been completed, 16 are needed in total
+            bool initDay = false;
+            int dayCount = 1;
+            int waitTime = -1;
 
             while (true)
             {// Here we are going to build are calender row by row and then return it as a single long string for the format method
@@ -184,8 +183,49 @@ namespace TasTrack
                             output.Append(intWall);
                         }
                         if (i % 6 != 0 && i < 42)
-                        {
-                            output.Append(spacer);
+                        {// This one might be a bit much
+                            if (initDay == false)
+                            {// As long as we haven't set the first day of the monthe we switch through the days to find our day
+                                switch (startDate[0])
+                                {// startDate[0] is a string value from DateTime for the day the 1st fell on
+                                    case "Sunday":
+                                        waitTime = 0;
+                                        break;
+                                    case "Monday":
+                                        waitTime = 5; // These are multiplied by 5 here because in every instance other than filling the days
+                                        break;        // we build the strings one character at a time, but for the date/task we do it as a chunk
+                                    case "Tuesday":   // so we need to have these by x5 instead of 0/1/2 etc. because if say Wednesday was 3
+                                        waitTime = 10;// then you would put three spacers then immediately 5 characters for the day/task and that
+                                        break;        // would throw off the entire rest of the calendar.
+                                    case "Wednesday":
+                                        waitTime = 15;
+                                        break;
+                                    case "Thursday":
+                                        waitTime = 20;
+                                        break;
+                                    case "Friday":
+                                        waitTime = 25;
+                                        break;
+                                    case "Saturday":
+                                        waitTime = 30;
+                                        break;
+                                }
+                                initDay = true;// make sure we never come back here once we do it a single time
+                            }
+                            if (waitTime == 0 && dayCount <= daysInMonth)
+                            {// If we are done waiting we put the initial day and then increment the day, if we hit the number of days in the month we stop
+                                output.Append(dayCount.ToString("00") + ":" + "00"); // The second "00" will be a variable later for the number of tasks on that day
+                                dayCount++;
+                                i += 4; // We do +4 here to keep the calendar spaced correctly because we are inserting 5 characters (a full block) all at once
+                            }
+                            else
+                            {
+                                output.Append(spacer); // Back to printing one character at a time
+                                if (waitTime > 0)
+                                {// We don't need wait time to go below 0 because what would be the point of that . . .
+                                    waitTime--; // I could subtract 1/5th from wait time, but then I'd need floating points, YUCK!
+                                }                                
+                            }
                         }
                     }
                     if (rows == 16)
