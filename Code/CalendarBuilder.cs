@@ -3,23 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//"╔═════════════════════════════════════════╗" + This is the target calendar for now
-//"║░░░░░░░░ May ░░░░░░░░░░░░░░ 2024 ░░░░░░░░║" + All the days are on the right day of the week
-//"╠═════════════════════════════════════════╣" + If I can reporoduce this and then reproduce next month
-//"║░ S ░░░ M ░░░ T ░░░ W ░░░ T ░░░ F ░░░ S ░║" + correctly then I think I've got it
-//"╟─────┬─────┬─────┬─────┬─────┬─────┬─────╢" +
-//"║░░░░░│░░░░░│░░░░░│01:00│02:00│03:00│04:00║" +
-//"╟─────┼─────┼─────┼─────┼─────┼─────┼─────╢" +
-//"║05:00│06:00│07:00│08:00│09:00│10:00│11:00║" +
-//"╟─────┼─────┼─────┼─────┼─────┼─────┼─────╢" +
-//"║12:00│13:00│14:00│15:00│16:00│17:00│18:00║" +
-//"╟─────┼─────┼─────┼─────┼─────┼─────┼─────╢" +
-//"║19:00│20:00│21:00│22:00│23:00│24:00│25:00║" +
-//"╟─────┼─────┼─────┼─────┼─────┼─────┼─────╢" +
-//"║26:00│27:00│28:00│29:00│30:00│31:00│░░░░░║" +
-//"╟─────┼─────┼─────┼─────┼─────┼─────┼─────╢" +
-//"║░░░░░│░░░░░│░░░░░│░░░░░│░░░░░│░░░░░│░░░░░║" +
-//"╚═════╧═════╧═════╧═════╧═════╧═════╧═════╝"
 
 namespace TasTrack
 {
@@ -29,15 +12,23 @@ namespace TasTrack
         public string create()
         {
             StringBuilder output = new StringBuilder();
-            List<int> forbidRow = new List<int> {0, 2, 4, 16};
-            DateTime now = DateTime.Now;
-            var startDate = new DateTime(now.Year, now.Month, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
-            int daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
-            string year = globalVar.dayNumber[3];
+            DateTime now = DateTime.Now;// To use the method DaysInMonth we have to initialize DateTime in this file
+            var startDate = new DateTime(1980, 2, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
+            int daysInMonth = DateTime.DaysInMonth(1980, 2);
+            string year = globalVar.dayNumber[3];// Pulls the year from an external use of DateTime
+            int today = Convert.ToInt32(globalVar.dayNumber[2]);// Pulls the day number from an external use of DateTime
             string numTasks = Convert.ToString(00); // Takes the number of tasks for each day and puts it on the calendar
-            string[] monthSelect = { "░░░░░░ January ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ February ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ March ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ April ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░░ May ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ June ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ July ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░ August ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ September ░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░ October ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ November ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ December ░░░░░░░░░░░░ " + year + " ░░░░░░░░" };
+            string[] calHeader = 
+                {// An indexed list of headers with the month from a use of DateTime that displays the month as a number and I subtract 1 to get the appropriate index
+                "░░░░░░ January ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ February ░░░░░░░░░░░░ " + year + " ░░░░░░░░", 
+                "░░░░░░░ March ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ April ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", 
+                "░░░░░░░░ May ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░░ June ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", 
+                "░░░░░░░ July ░░░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░ August ░░░░░░░░░░░░░ " + year + " ░░░░░░░░", 
+                "░░░░░ September ░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░░ October ░░░░░░░░░░░░ " + year + " ░░░░░░░░", 
+                "░░░░░ November ░░░░░░░░░░░░ " + year + " ░░░░░░░░", "░░░░░ December ░░░░░░░░░░░░ " + year + " ░░░░░░░░" 
+                };
             string days = "░ S ░░░ M ░░░ T ░░░ W ░░░ T ░░░ F ░░░ S ░";
-            // These are all charcter variables so that they can be changed if needed to something else, maybe they will move to their own document so I can have different "styles" set up
+            // These are all charcter variables so that they can be changed if wanted to something else, maybe they will move to their own document so I can have different "styles" set up
             char extWall = '║';
             char intWall = '│';
             char extCornerTL = '╔';
@@ -80,7 +71,7 @@ namespace TasTrack
                         }
                     }
                     if (rows == 1)
-                    {
+                    {// This attactches the month name and the year to the header based off an indexed list 
                         if (i == 0)
                         {
                             output.Append(extWall);
@@ -91,8 +82,8 @@ namespace TasTrack
                             break;
                         }
                         if (i == 1)
-                        {
-                            output.Append(monthSelect[globalVar.monthListNum]);
+                        {// Because we put more than one character and we only need to do that once we can have i = 1 and then let i iterate with no effect
+                            output.Append(calHeader[globalVar.monthListNum]);
                         }    
                     }
                     if (rows == 2)
@@ -112,7 +103,7 @@ namespace TasTrack
                         }
                     }
                     if (rows == 3)
-                    {
+                    {// Gives us the day labels (S/M/T etc.)
                         if (i == 0)
                         {
                             output.Append(extWall);
@@ -123,7 +114,7 @@ namespace TasTrack
                             break;
                         }
                         if (i == 1)
-                        {
+                        {// Because we put more than one character and we only need to do that once we can have i = 1 and then let i iterate with no effect
                             output.Append(days);
                         }
                     }

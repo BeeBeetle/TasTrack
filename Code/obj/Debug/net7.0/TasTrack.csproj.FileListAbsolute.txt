@@ -28,3 +28,5 @@ D:\programs\TasTrack\obj\Debug\net7.0\refint\TasTrack.dll
 D:\programs\TasTrack\obj\Debug\net7.0\TasTrack.pdb
 D:\programs\TasTrack\obj\Debug\net7.0\TasTrack.genruntimeconfig.cache
 D:\programs\TasTrack\obj\Debug\net7.0\ref\TasTrack.dll
+D:\programs\TasTrack\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\programs\TasTrack\obj\Debug\net7.0\TasTrack.csproj.CopyComplete

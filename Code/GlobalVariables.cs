@@ -33,7 +33,7 @@ namespace TasTrack
         public static string filePath
         {
             //Determines the file path here at login either when creating account
-            //or when logging into an account (nothing currently writes to any file)
+            //or when logging into an account
             get { return tempPath; }
             set { tempPath = value; }
         }
@@ -60,9 +60,9 @@ namespace TasTrack
         public string date = DateTime.Now.ToString();//The date and time right NOW
         public int monthListNum = DateTime.Now.Month - 1;//Used to pull the month from an indexed list so 0 is January
         public string[] dateArray = DateTime.Now.ToString("D").Replace(", ", ",").Split(",");//Make the date an array to get just month, dd for display purposes
-        public string[] dayNumber = DateTime.Now.ToString("D").Replace(", ", " ").Split(" ");
+        public string[] dayNumber = DateTime.Now.ToString("D").Replace(", ", " ").Split(" ");//Will get todays date (just the day) with index 2
 
-        public int screenWidth = Console.WindowWidth;//Listed as a number of columns, each column is the width of one constant width character
+        public int screenWidth = Console.WindowWidth - 1;//Listed as a number of columns, each column is the width of one constant width character
 
         private static bool isTaskList = false;
         public static bool taskList

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection.PortableExecutable;
+using Newtonsoft.Json;
 
 namespace TasTrack
 {
@@ -46,40 +47,43 @@ namespace TasTrack
                 {
                     case 1:
                         Console.Write("Name: ");
-                        string usernameInput = Console.ReadLine();
-                        GlobalVar.displayName = usernameInput;
-                        GlobalVar.filePath = profiles + usernameInput + "Profile.txt";
+                        string usernameInput = Console.ReadLine();// Our username which is part of the file name for easy finding!
+                        GlobalVar.displayName = usernameInput;// Will be used later on other menus, just listing who is logged in
+                        GlobalVar.filePath = profiles + usernameInput + "Profile.json";// See! right there in the file name! Plus now its here for later
                         string passwordInput = null;
                         string storedHash = null;
                         if (File.Exists(GlobalVar.filePath))
-                        {
+                        {// To log in without creating an account we have to have a file already otherwise there is no account (duh!)
                             using (StreamReader reader = new StreamReader(GlobalVar.filePath))
-                            {
-                                string line;
-                                char[] delimChars = { '/' };
-                                while ((line = reader.ReadLine()) != null)
-                                {
-                                    string[] findPass = line.Split(delimChars);
-                                    if (findPass[0] == "P|")
-                                    {
-                                        storedHash = findPass[1];
-                                    }
-                                }
+                            {// Read the JSON file for the specified account and then deserialize it so we can access what we need
+                                var json = reader.ReadToEnd();
+                                JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
+                                storedHash = desrlzdjson.UserInfo.HashPass;// Right now all we need is the hashed password for comparison
                             }
                             Console.Write("Password: ");
                             while (true)
                             {
                                 var key = Console.ReadKey(true);
                                 if (key.Key == ConsoleKey.Enter)
+                                {
                                     break;
+                                }
+                                if (key.Key == ConsoleKey.Backspace)
+                                {// This whole mess lets us backspace when typing a password but also keeps it visually anonymous
+                                    Console.Write("\b");
+                                    Console.Write(' ');
+                                    Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                                }
                                 else
+                                {
                                     Console.Write("*");
+                                }
                                 passwordInput += key.KeyChar;
                             }
                             if (SecretHasher.Verify(passwordInput, storedHash) == true)
-                            {
-                                GlobalVar.isLoggedIn = true;
-                            }
+                            {// If the password's match then log us in baby!
+                                GlobalVar.isLoggedIn = true;// Once we get to the bottom and break we will drop right out of our switch statement
+                            }                               // Then we drop right out of this CLASS and Main() sees that we are logged in and gets the main menu
                             else
                             {
                                 GlobalVar.errorNumber = 2;
@@ -96,15 +100,15 @@ namespace TasTrack
                     case 2:
                         Console.Write("\nWhat is your name? ");
                         string newUsername = Console.ReadLine();
-                        GlobalVar.filePath = profiles + newUsername + "Profile.txt";
+                        GlobalVar.filePath = profiles + newUsername + "Profile.json";
                         if (File.Exists(GlobalVar.filePath))
-                        {
-                            GlobalVar.errorNumber = 2;
+                        {// Just a check to see if a profile already exists, since we check logging in based on username if a user already exists with the name entered
+                            GlobalVar.errorNumber = 2;// we can't allow it because the program won't know how to distinguish between two identical file names
                             break;
                         }
                         else
                         {
-                            GlobalVar.displayName = newUsername;
+                            GlobalVar.displayName = newUsername;// Once again will be used later
                         }
                         Console.Write("Please enter a good password: ");
                         string newPasswordTry = null;
@@ -112,9 +116,19 @@ namespace TasTrack
                         {
                             var key = Console.ReadKey(true);
                             if (key.Key == ConsoleKey.Enter)
+                            {
                                 break;
+                            }
+                            if (key.Key == ConsoleKey.Backspace)
+                            {// See this instance of code in case 1
+                                Console.Write("\b");
+                                Console.Write(' ');
+                                Console.SetCursorPosition(Console.CursorLeft-1, Console.CursorTop);
+                            }
                             else
+                            {
                                 Console.Write("*");
+                            }
                             newPasswordTry += key.KeyChar;
                         }
                         Console.Write("\nPlease reenter your password: ");
@@ -123,27 +137,37 @@ namespace TasTrack
                         {
                             var key = Console.ReadKey(true);
                             if (key.Key == ConsoleKey.Enter)
+                            {
                                 break;
+                            }
+                            if (key.Key == ConsoleKey.Backspace)
+                            {// See the first instance of this code
+                                Console.Write("\b");
+                                Console.Write(' ');
+                                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                            }
                             else
+                            {
                                 Console.Write("*");
+                            }
                             newPasswordConfirm += key.KeyChar;
                         }
                         if (newPasswordTry == newPasswordConfirm)
-                        {
-                            using (var userFile = File.Create(GlobalVar.filePath)) ;
-                            {
-                                using (StreamWriter writer = new StreamWriter(GlobalVar.filePath, true))
-                                {
-                                    writer.WriteLine("U|/" + GlobalVar.displayName);
-                                    writer.WriteLine("P|/" + SecretHasher.Hash(newPasswordConfirm));
-                                }
-                            }
+                        {                              
+                            using (StreamWriter writer = new StreamWriter(GlobalVar.filePath, true))
+                            {// After making the file above we write to it with JSON.NET with the username and the hashed version of the passowrd
+                                Userinfo userinfo = new Userinfo { Username = GlobalVar.displayName, HashPass = SecretHasher.Hash(newPasswordConfirm) };
+                                JSONClass userToJson = new JSONClass { UserInfo = userinfo };
+                                writer.WriteLine(JsonConvert.SerializeObject(userToJson, Formatting.Indented));
+                            }                            
                             GlobalVar.isLoggedIn = true;
                         }
                         else
                         {
                             GlobalVar.errorNumber = 3;
-                        }
+                        }// Clear out our passwords after we are done with them just in case, maybe could be a more secure way to handle the passwords
+                        newPasswordTry = null;// Maybe hash them right after they are entered and then do the compare? Not that important for this though
+                        newPasswordConfirm = null;
                         break;
                     case 3:
                         Console.WriteLine("\nGoodbye! (:");
@@ -156,9 +180,9 @@ namespace TasTrack
                 }
             }
             catch
-            {
-                GlobalVar.errorNumber = 4;
-            }
-        }
+            {// Anything that causes an exception will go here and we will get an error message, right now I don't really care what the exception is.
+                GlobalVar.errorNumber = 4;// And obviously this program is small enough I don't think it matters two much either. Because I should be
+            }// to find all of them through the course of coding and plan around them. So we really shouldn't get anything crazy. Maybe a non English
+        }    // machine could throw us off here by giving us exceptions if specific work needs to be done to handle non-Latin characters or something
     }
 }

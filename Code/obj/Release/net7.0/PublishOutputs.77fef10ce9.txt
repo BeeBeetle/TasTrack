@@ -1,0 +1,6 @@
+D:\programs\TasTrack\bin\Release\net7.0\publish_inclusive\TasTrack.exe
+D:\programs\TasTrack\bin\Release\net7.0\publish_inclusive\TasTrack.dll
+D:\programs\TasTrack\bin\Release\net7.0\publish_inclusive\TasTrack.deps.json
+D:\programs\TasTrack\bin\Release\net7.0\publish_inclusive\TasTrack.runtimeconfig.json
+D:\programs\TasTrack\bin\Release\net7.0\publish_inclusive\TasTrack.pdb
+D:\programs\TasTrack\bin\Release\net7.0\publish_inclusive\Newtonsoft.Json.dll

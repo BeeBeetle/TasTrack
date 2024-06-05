@@ -196,3 +196,8 @@ D:\programs\TasTrack\obj\Release\net7.0\win-x86\refint\TasTrack.dll
 D:\programs\TasTrack\obj\Release\net7.0\win-x86\TasTrack.pdb
 D:\programs\TasTrack\obj\Release\net7.0\win-x86\TasTrack.genruntimeconfig.cache
 D:\programs\TasTrack\obj\Release\net7.0\win-x86\ref\TasTrack.dll
+D:\programs\TasTrack\bin\Release\net7.0\win-x86\TasTrack.dll.manifest
+D:\programs\TasTrack\bin\Release\net7.0\win-x86\TasTrack.application
+D:\programs\TasTrack\bin\Release\net7.0\win-x86\Newtonsoft.Json.dll
+D:\programs\TasTrack\obj\Release\net7.0\win-x86\TasTrack.dll.manifest
+D:\programs\TasTrack\obj\Release\net7.0\win-x86\TasTrack.application
