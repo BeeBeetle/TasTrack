@@ -1,2 +1,0 @@
-D:\programs\TasTrack\bin\Release\net7.0\win-x86\app.publish\TasTrack.pdb
-D:\programs\TasTrack\bin\Release\net7.0\win-x86\app.publish\TasTrack.exe
