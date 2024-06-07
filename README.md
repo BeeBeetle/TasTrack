@@ -6,3 +6,4 @@
  2. Create user
  3. Open the main menu
  4. View a temporary calender and taks list placeholder
+ 5. Add a task to the task list
