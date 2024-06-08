@@ -24,6 +24,7 @@ namespace TasTrack
             string profiles = GlobalVar.profiles;
             loginPrinter.PrintTitle();
             loginPrinter.PrintMenu();
+            loginPrinter.PrintChoice();
             try
             {
                 GlobalVar.errorNumber = -1;

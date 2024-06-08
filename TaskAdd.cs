@@ -40,6 +40,7 @@ namespace TasTrack
                     {// We first need the task name
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
+                        menuPrinter.PrintChoice();
                         GlobalVar.errorNumber = -1;
                         Console.Write("What do you want to name this task?: ");
                         addTask.TaskName = Console.ReadLine();

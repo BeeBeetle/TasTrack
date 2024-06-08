@@ -23,6 +23,7 @@ namespace TasTrack
             if (GlobalVar.errorNumber == 4) { menuPrinter.oopsyDesc = "You gotta enter a number before you can continue!"; }
             menuPrinter.PrintTitle();
             menuPrinter.PrintMenu();
+            menuPrinter.PrintChoice();
             try
             {
                 int select = Convert.ToInt32(Console.ReadLine());

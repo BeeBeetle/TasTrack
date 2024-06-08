@@ -14,15 +14,16 @@ namespace TasTrack
         public string menuText;
         public string optionChoice;
         public string mainMenuSum;
-        public Printer() 
+        public List<string> showTasks = new List<string>();
+        public Printer()
         {
-            title = "\n ______  ______  _____   ___________  ___  _____  _   __" +
-                "\r\n/\\__  _\\/\\  _  \\/\\  _ `\\|_   _| ___ \\/ _ \\/  __ \\| | / /" +
-                "\r\n\\/_/\\ \\/\\ \\ \\L\\ \\ \\,\\L\\_\\ | | | |_/ / /_\\ \\ /  \\/| |/ / " +
-                "\r\n   \\ \\ \\ \\ \\  __ \\/_\\__ \\ | | |    /|  _  | |    |    \\ " +
-                "\r\n    \\ \\ \\ \\ \\ \\/\\ \\/\\ \\L\\ \\ | | |\\ \\| | | | \\__/\\| |\\  \\" +
-                "\r\n     \\ \\_\\ \\ \\_\\ \\_\\ `\\____\\/ \\_| \\_\\_| |_/\\____/\\_| \\_/" +
-                "\r\n      \\/_/  \\/_/\\/_/\\/_____/";
+            title = "\n   ______  ______  _____  ___________  ___  _____  _   __" +
+                "\r\n  /\\__  _\\/\\  _  \\/\\  _ `\\_   _| ___ \\/ _ \\/  __ \\| | / /" +
+                "\r\n  \\/_/\\ \\/\\ \\ \\L\\ \\ \\,\\L\\_\\| | | |_/ / /_\\ \\ /  \\/| |/ / " +
+                "\r\n     \\ \\ \\ \\ \\  __ \\/_\\__ \\| | |    /|  _  | |    |    \\ " +
+                "\r\n      \\ \\ \\ \\ \\ \\/\\ \\/\\ \\L\\ \\| | |\\ \\| | | | \\__/\\| |\\  \\" +
+                "\r\n       \\ \\_\\ \\ \\_\\ \\_\\ `\\____/ \\_| \\_\\_| |_/\\____/\\_| \\_/" +
+                "\r\n        \\/_/  \\/_/\\/_/\\/_____/";
             //title = "\n _____ ___   _____ ___________  ___  _____  _   __" +
             //    "\r\n|_   _/ _ \\ /  ___|_   _| ___ \\/ _ \\/  __ \\| | / /" +
             //    "\r\n  | |/ /_\\ \\\\ `--.  | | | |_/ / /_\\ \\ /  \\/| |/ / " +
@@ -55,10 +56,48 @@ namespace TasTrack
             Console.WriteLine();
             Console.WriteLine(menuText);
             Console.WriteLine();
-            if (!GlobalVar.isAddTask && !GlobalVar.isRemvTask)
+        }
+        public void PrintTasks()
+        {
+            GlobalVar globalVar = new GlobalVar();
+            int columnWidth = globalVar.screenWidth;
+            string output = null;
+            int totalChars = 0;
+            if (showTasks.Count() > 0)
             {
-                Console.Write(optionChoice);
+                for (int i = 0; i < showTasks.Count(); i++) 
+                {
+                    totalChars += showTasks[i].Length;
+                    if (totalChars < columnWidth) 
+                    {
+                        output += (showTasks[i]);
+                    }
+                    else
+                    {
+                        Console.WriteLine(output);
+                        totalChars = 0;
+                        i--;
+                        output = null;
+                    }
+                }
+                Console.WriteLine(output);
+                //string column = string.Join("; ", showTasks.ToArray());
+                //while (true)
+                //{
+                //    string col = new string(column.Skip<char>(loopCount * columnWidth).Take<char>(columnWidth).ToArray()).PadRight(columnWidth); 
+                //    if (String.IsNullOrWhiteSpace(col))
+                //    {
+                //        break;
+                //    }
+                //    output.AppendFormat("{0}\n", col);
+                //    loopCount++;
+                //}
+                Console.WriteLine();
             }
+        }
+        public void PrintChoice()
+        {
+            Console.Write(optionChoice);
         }
     }
 }
