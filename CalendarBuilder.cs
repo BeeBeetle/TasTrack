@@ -8,15 +8,24 @@ namespace TasTrack
 {
     internal class CalendarBuilder
     {
-        GlobalVar globalVar = new GlobalVar();
+        GlobalVal globalVal = new GlobalVal();
         public string Create()
         {
             StringBuilder output = new StringBuilder();
-            DateTime now = DateTime.Now;// To use the method DaysInMonth we have to initialize DateTime in this file
-            var startDate = new DateTime(1980, 2, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
-            int daysInMonth = DateTime.DaysInMonth(1980, 2);
-            string year = globalVar.dayNumber[3];// Pulls the year from an external use of DateTime
-            int today = Convert.ToInt32(globalVar.dayNumber[2]);// Pulls the day number from an external use of DateTime
+            if (int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust > 12)
+            {
+                GlobalVal.yearAdjust += 1;
+                GlobalVal.monthAdjust = (int.Parse(globalVal.dayNumber[0]) - (int.Parse(globalVal.dayNumber[0]) * 2)) + 1;
+            }
+            if (int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust < 1)
+            {
+                GlobalVal.yearAdjust -= 1;
+                GlobalVal.monthAdjust = 12 - int.Parse(globalVal.dayNumber[0]);
+            }
+            int year = int.Parse(globalVal.dayNumber[2]) + GlobalVal.yearAdjust;// Pulls the year from DateTime
+            int month = int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust;// Pulls the month from DateTime
+            var startDate = new DateTime(year, month, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
+            int daysInMonth = DateTime.DaysInMonth(year, month);
             string numTasks = Convert.ToString(00); // Takes the number of tasks for each day and puts it on the calendar
             string[] calHeader = 
                 {// An indexed list of headers with the month from a use of DateTime that displays the month as a number and I subtract 1 to get the appropriate index
@@ -83,7 +92,7 @@ namespace TasTrack
                         }
                         if (i == 1)
                         {// Because we put more than one character and we only need to do that once we can have i = 1 and then let i iterate with no effect
-                            output.Append(calHeader[globalVar.monthListNum]);
+                            output.Append(calHeader[month - 1]);
                         }    
                     }
                     if (rows == 2)
@@ -252,7 +261,7 @@ namespace TasTrack
         public string Format(string column1, string column2)
         {
             int column1Width = 43;
-            int column2Width = globalVar.screenWidth - (column1Width+1);
+            int column2Width = globalVal.screenWidth - (column1Width+1);
             int loopCount = 0;
             int movedChar = 0;
             int truncate = 0;

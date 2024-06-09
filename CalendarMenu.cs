@@ -10,71 +10,81 @@ namespace TasTrack
 {
     internal class CalendarMenu
     {
-        GlobalVar globalVar = new GlobalVar();
+        GlobalVal globalVal = new GlobalVal();
+        List<string> currentTasks = new List<string> { };
         public CalendarMenu()
         {
             var calendarMenu = new CalendarBuilder();
             Printer calendarPrinter = new Printer();
-            string displayTasks = null;
-            calendarPrinter.menuText = "1: Select a day\n2: Next Month\n3: Previous Month\n4: Tasks Menu\n5: Return to Main Menu";
-            using (StreamReader sr = new StreamReader(GlobalVar.filePath))
-            {
-                var json = sr.ReadToEnd();
-                JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
-                if (desrlzdjson.TaskList != null)
-                {
-                    int count = desrlzdjson.TaskList.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        if (desrlzdjson.TaskList[i].TaskDue.Date == DateTime.Now.Date)
-                        {
-                            displayTasks += desrlzdjson.TaskList[i].TaskName + ", " + desrlzdjson.TaskList[i].TaskDue.ToString("D") + "; ";
-                        }
-                    }
-                }
-            }
-            if (GlobalVar.errorNumber == 0) { calendarPrinter.oopsyDesc = "Oops! Please select a valid option."; }
-            if (GlobalVar.errorNumber == 1) { calendarPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
-            if (GlobalVar.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }
-            if (GlobalVar.errorNumber == 3) { calendarPrinter.oopsyDesc = "Your passwords do not match. Please try again."; }
-            if (GlobalVar.errorNumber == 4) { calendarPrinter.oopsyDesc = "You gotta enter a number before you can continue!"; }
+            string input = null; 
+            string[] monthDay = new DateTime(
+                int.Parse(globalVal.dayNumber[2]), 
+                int.Parse(globalVal.dayNumber[0]), 
+                int.Parse(globalVal.dayNumber[1])
+                ).AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).ToString("D").Replace(", ", ",").Split(",");
+            currentTasks = globalVal.SummonTasks(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).AddYears(GlobalVal.yearAdjust));
+            int year = int.Parse(globalVal.dayNumber[2]);// Pulls the year from DateTime
+            int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime
+            int today = int.Parse(globalVal.dayNumber[1]);// Pulls the day number from DateTime
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            calendarPrinter.menuText = "1: Select a day\n2: Previous Month\n3: Next Month\n4: Tasks Menu\n5: Return to Main Menu";
+            if (GlobalVal.errorNumber == 0) { calendarPrinter.oopsyDesc = "Oops! Please select a valid option."; }
+            if (GlobalVal.errorNumber == 1) { calendarPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
+            if (GlobalVal.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }
+            if (GlobalVal.errorNumber == 3) { calendarPrinter.oopsyDesc = "Your passwords do not match. Please try again."; }
+            if (GlobalVal.errorNumber == 4) { calendarPrinter.oopsyDesc = "You gotta enter a number before you can continue!"; }
+            if (GlobalVal.errorNumber == 5) { calendarPrinter.oopsyDesc = "That day is outside of this month silly!"; }
             calendarPrinter.PrintTitle();
-            Console.WriteLine(calendarMenu.Format(calendarMenu.Create(),
-            globalVar.dateArray[1] + ": " + displayTasks));
+            Console.WriteLine(calendarMenu.Format(calendarMenu.Create(), monthDay[1] + ": " + String.Join(',', currentTasks.ToArray())));
             calendarPrinter.PrintMenu();
             calendarPrinter.PrintChoice();
             try
             {
                 int select = Convert.ToInt32(Console.ReadLine());
-                GlobalVar.errorNumber = -1;
+                GlobalVal.errorNumber = -1;
                 switch (select)
                 {
                     case 1:
-                        GlobalVar.errorNumber = 1;
+                        int output = 0;
+                        Console.Write("Select a day by number: ");
+                        try { output = int.Parse(globalVal.EscapeLoop(input)); }
+                        catch { GlobalVal.errorNumber = 2; }
+                        if (output > daysInMonth || output < daysInMonth)
+                        {
+                            GlobalVal.errorNumber = 5;
+                            break;
+                        }
+                        GlobalVal.dayAdjust = output - int.Parse(globalVal.dayNumber[1]);
                         break;
                     case 2:
-                        GlobalVar.errorNumber = 1;
+                        GlobalVal.monthAdjust -= 1;
                         break;
                     case 3:
-                        GlobalVar.errorNumber = 1;
+                        GlobalVal.monthAdjust += 1;
                         break;
                     case 4:
-                        GlobalVar.calView = false;
-                        GlobalVar.taskList = true;
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.calView = false;
+                        GlobalVal.taskList = true;
                         break;
                     case 5:
-                        GlobalVar.calView = false;
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.calView = false;
                         var start = new MainLoop();
                         start.Main();
                         break;
                     default:
-                        GlobalVar.errorNumber = 0;
+                        GlobalVal.errorNumber = 0;
                         break;
                 }
             }
             catch
             {
-                GlobalVar.errorNumber = 4;
+                GlobalVal.errorNumber = 4;
             }
         }
     }

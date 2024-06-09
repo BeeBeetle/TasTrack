@@ -11,89 +11,70 @@ namespace TasTrack
 {
     internal class TasksMenu
     {
-        GlobalVar globalVar = new GlobalVar();
-        List<Task> currentTasks = new List<Task> { };
-        int count;
-        string addTask;
+        GlobalVal globalVal = new GlobalVal();
+        List<string> currentTasks = new List<string> { };
         public TasksMenu()
         {
             var start = new MainLoop();
             Printer menuPrinter = new Printer();
-            menuPrinter.menuText = "1: Add Task\n2: Remove Task\n3: Next Day\n4: Previous Day\n5: Return to Calendar Menu\n6: Return to Main Menu";
-            using (StreamReader sr = new StreamReader(GlobalVar.filePath))
-            {
-                var json = sr.ReadToEnd();
-                JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
-                if (desrlzdjson.TaskList != null)
-                {
-                    count = desrlzdjson.TaskList.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        if (desrlzdjson.TaskList[i].TaskDue.Date == DateTime.Now.Date)
-                        {
-                            currentTasks.Add(desrlzdjson.TaskList[i]);
-                        }
-                    }
-                }
-            }
-            currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.ToShortDateString().CompareTo(y.TaskDue.ToShortDateString()); });
-            count = currentTasks.Count;
-            for (int i = 0; i < count; i++)
-            {
-                addTask = currentTasks[i].TaskName + ", " + currentTasks[i].TaskDue.ToString("D");
-                menuPrinter.showTasks.Add(addTask);
-            }
-            if (GlobalVar.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
-            if (GlobalVar.errorNumber == 1) { menuPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
-            if (GlobalVar.errorNumber == 2) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
-            if (GlobalVar.errorNumber == 3) { menuPrinter.oopsyDesc = ""; }
-            if (GlobalVar.errorNumber == 4) { menuPrinter.oopsyDesc = "You gotta use a number, not a letter!"; }
+            menuPrinter.menuText = "1: Add Task\n2: Remove Task\n3: Previous Day\n4: Next Day\n5: Calendar Menu\n6: Return to Main Menu";
+            if (GlobalVal.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
+            if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
+            if (GlobalVal.errorNumber == 2) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
+            if (GlobalVal.errorNumber == 3) { menuPrinter.oopsyDesc = ""; }
+            if (GlobalVal.errorNumber == 4) { menuPrinter.oopsyDesc = "You gotta use a number, not a letter!"; }
             menuPrinter.PrintTitle();
             menuPrinter.PrintMenu();
-            menuPrinter.PrintTasks();
+            Console.WriteLine("Tasks for " + DateTime.Now.AddDays(GlobalVal.dayAdjust).ToString("D") + ":");
+            currentTasks = globalVal.SummonTasks(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
+            menuPrinter.PrintTasks(currentTasks);
             menuPrinter.PrintChoice();
-            int currentYear = int.Parse(globalVar.dayNumber[3]);
-            int today = int.Parse(globalVar.dayNumber[2]);
+            int currentYear = int.Parse(globalVal.dayNumber[2]);
+            int today = int.Parse(globalVal.dayNumber[1]);
 
             try
             {
                 int select = int.Parse(Console.ReadLine());
-                GlobalVar.errorNumber = -1;
+                GlobalVal.errorNumber = -1;
                 switch (select)
                 {
                     case 1:// Here we will add a taks to our list
-                        GlobalVar.isAddTask = true;
-                        GlobalVar.taskList = false;
+                        GlobalVal.addTask = true;
+                        GlobalVal.taskList = false;
                         break;
                     case 2:// If we go here we can edit tasks
-                        GlobalVar.taskList = false;
-                        GlobalVar.isRemvTask = true;
+                        GlobalVal.taskList = false;
+                        GlobalVal.remvTask = true;
                         break;
                     case 3:
-                        menuPrinter.PrintTitle();
-                        menuPrinter.PrintMenu();
-                        menuPrinter.PrintTasks();
+                        GlobalVal.dayAdjust -= 1;
                         break;
                     case 4:
-                        GlobalVar.errorNumber = 1;
+                        GlobalVal.dayAdjust += 1;
                         break;
                     case 5:
-                        GlobalVar.taskList = false;
-                        GlobalVar.calView = true;
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.taskList = false;
+                        GlobalVal.calView = true;
                         start.Main();
                         break;
                     case 6:
-                        GlobalVar.taskList = false;
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.taskList = false;
                         start.Main();
                         break;
                     default:
-                        GlobalVar.errorNumber = 0;
+                        GlobalVal.errorNumber = 0;
                         break;
                 }
             }
             catch
             {
-                GlobalVar.errorNumber = 4;
+                GlobalVal.errorNumber = 4;
             }
         }
     }

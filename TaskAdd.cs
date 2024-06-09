@@ -9,11 +9,11 @@ namespace TasTrack
 {
     internal class TaskAdd
     {
-        GlobalVar globalVar = new GlobalVar();
+        GlobalVal globalVar = new GlobalVal();
         public TaskAdd()
         {
             Printer menuPrinter = new Printer();
-            menuPrinter.menuText = "Follow the steps to add a task:";
+            menuPrinter.menuText = "Press escape at any time to return to the Task Menu.\nOtherwise, follow the steps to add a task:";
             Task addTask = new Task { };// Initialize the class we use for tasks
             int year = 0;
             int month = 0;
@@ -26,30 +26,30 @@ namespace TasTrack
             bool addingTask = true;
             while (addingTask)
             {
-                if (GlobalVar.errorNumber == 1) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
-                if (GlobalVar.errorNumber == 2) { menuPrinter.oopsyDesc = "Oops! I don't recognize that date! Did you include the slashes?"; }
-                if (GlobalVar.errorNumber == 3) { menuPrinter.oopsyDesc = "You entered a day that doesn't exist in the month you chose."; }
-                if (GlobalVar.errorNumber == 4) { menuPrinter.oopsyDesc = "Oops! I didn't recognize that as a 24 hour time! Did you include the colon?"; }
-                if (GlobalVar.errorNumber == 5) { menuPrinter.oopsyDesc = "That year is outside of my scope."; }
-                if (GlobalVar.errorNumber == 6) { menuPrinter.oopsyDesc = "I don't think thats a month . . ."; }
-                if (GlobalVar.errorNumber == 7) { menuPrinter.oopsyDesc = "There are only 24 hours in a day, 0 - 23."; }
-                if (GlobalVar.errorNumber == 8) { menuPrinter.oopsyDesc = "That's the wrong amount of minutes!"; }
+                if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
+                if (GlobalVal.errorNumber == 2) { menuPrinter.oopsyDesc = "Oops! I don't recognize that date! Did you include the slashes?"; }
+                if (GlobalVal.errorNumber == 3) { menuPrinter.oopsyDesc = "You entered a day that doesn't exist in the month you chose."; }
+                if (GlobalVal.errorNumber == 4) { menuPrinter.oopsyDesc = "Oops! I didn't recognize that as a 24 hour time! Did you include the colon?"; }
+                if (GlobalVal.errorNumber == 5) { menuPrinter.oopsyDesc = "That year is outside of my scope."; }
+                if (GlobalVal.errorNumber == 6) { menuPrinter.oopsyDesc = "I don't think thats a month . . ."; }
+                if (GlobalVal.errorNumber == 7) { menuPrinter.oopsyDesc = "There are only 24 hours in a day, 0 - 23."; }
+                if (GlobalVal.errorNumber == 8) { menuPrinter.oopsyDesc = "That's the wrong amount of minutes!"; }
                 for (int i = breakpoint; i < 3; i++)
                 {
+                    string input = null;
                     if (i == 0)
                     {// We first need the task name
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
-                        menuPrinter.PrintChoice();
-                        GlobalVar.errorNumber = -1;
+                        GlobalVal.errorNumber = -1;
                         Console.Write("What do you want to name this task?: ");
-                        addTask.TaskName = Console.ReadLine();
+                        addTask.TaskName = globalVar.EscapeLoop(input);
                         Console.Write("\nDo you want to name your task ");
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(addTask.TaskName);
                         Console.ResetColor();
                         Console.Write("? Y/N: ");
-                        string response = Console.ReadLine().ToLower(); 
+                        string response = globalVar.EscapeLoop(input).ToLower();
                         if (response == "y" || response == "yes")
                         {
                             continue;
@@ -61,7 +61,7 @@ namespace TasTrack
                         }
                         else
                         {
-                            GlobalVar.errorNumber = 1;
+                            GlobalVal.errorNumber = 1;
                             breakpoint = 0;
                             break;
                         }
@@ -70,10 +70,10 @@ namespace TasTrack
                     {// We also need a date the task is due
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
-                        GlobalVar.errorNumber = -1;
+                        GlobalVal.errorNumber = -1;
                         Console.WriteLine("What date should this be completed by?");
                         Console.Write("Please enter a date as MM/DD/YYYY: ");
-                        string dateInput = Console.ReadLine();
+                        string dateInput = globalVar.EscapeLoop(input);
                         string[] dateOutput = dateInput.Split('/'); ;// We split the date because we need the parts as numbers
                         if (dateInput != null)
                         {// Lets make sure that the date is theoretically valid and has a month day and year entered
@@ -85,7 +85,7 @@ namespace TasTrack
                             }
                             catch
                             {
-                                GlobalVar.errorNumber = 2;
+                                GlobalVal.errorNumber = 2;
                                 breakpoint = 1;
                                 break;
                             }
@@ -95,13 +95,13 @@ namespace TasTrack
                         day = int.Parse(dateOutput[1]);
                         if (year > 9999 || year < 0)
                         {
-                            GlobalVar.errorNumber = 5;
+                            GlobalVal.errorNumber = 5;
                             breakpoint = 1;
                             break;
                         }
                         if (month > 13 || month < 0)
                         {// I split the month/year validity checks because I want two different error messages
-                            GlobalVar.errorNumber = 6;
+                            GlobalVal.errorNumber = 6;
                             breakpoint = 1;
                             break;
                         }
@@ -109,13 +109,13 @@ namespace TasTrack
                         {// If the year is good and the month is good then we can move on to checking if day entered is valid
                             if (thirtyDay.Contains(month) && day > 30)
                             {// Thirty days has september, april, june, and november
-                                GlobalVar.errorNumber = 3;
+                                GlobalVal.errorNumber = 3;
                                 breakpoint = 1;
                                 break;
                             }
                             if (thirtyoneDay.Contains(month) && day > 31)
                             {// All the rest have 31
-                                GlobalVar.errorNumber = 3;
+                                GlobalVal.errorNumber = 3;
                                 breakpoint = 1;
                                 break;
                             }
@@ -124,13 +124,13 @@ namespace TasTrack
                                 bool leapYear = DateTime.IsLeapYear(year);// Easy leap year check for a leap year
                                 if (!leapYear && day > 28)
                                 {
-                                    GlobalVar.errorNumber = 3;
+                                    GlobalVal.errorNumber = 3;
                                     breakpoint = 1;
                                     break;
                                 }
                                 if (leapYear && day > 29)
                                 {
-                                    GlobalVar.errorNumber = 3;
+                                    GlobalVal.errorNumber = 3;
                                     breakpoint = 1;
                                     break;
                                 }
@@ -141,13 +141,13 @@ namespace TasTrack
                     {
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
-                        GlobalVar.errorNumber = -1;
+                        GlobalVal.errorNumber = -1;
                         Console.Write("\nWould you like to specify a time? Y/N: ");
-                        string response = Console.ReadLine().ToLower();
+                        string response = globalVar.EscapeLoop(input).ToLower();
                         if (response == "y" || response == "yes")
                         {
                             Console.Write("Using the 24 clock (11pm is 23/12am is 0) please enter a time as HH:MM?: ");
-                            string hourInput = Console.ReadLine();
+                            string hourInput = globalVar.EscapeLoop(input);
                             string[] hourOutput = hourInput.Split(':');
                             try
                             {
@@ -156,7 +156,7 @@ namespace TasTrack
                             }
                             catch
                             {
-                                GlobalVar.errorNumber = 4;
+                                GlobalVal.errorNumber = 4;
                                 breakpoint = 2;
                                 break;
                             }
@@ -164,12 +164,12 @@ namespace TasTrack
                             minute = int.Parse(hourOutput[1]);
                             if (hour < 0 || hour > 23)
                             {
-                                GlobalVar.errorNumber = 7;
+                                GlobalVal.errorNumber = 7;
                                 breakpoint = 2;
                             }    
                             if (minute < 0 || minute > 59)
                             {
-                                GlobalVar.errorNumber = 8;
+                                GlobalVal.errorNumber = 8;
                                 breakpoint = 2;
                             }
                             else
@@ -186,7 +186,7 @@ namespace TasTrack
                         }
                         else
                         {
-                            GlobalVar.errorNumber = 1;
+                            GlobalVal.errorNumber = 1;
                             breakpoint = 2;
                             break;
                         }
@@ -199,7 +199,7 @@ namespace TasTrack
             List<Task> existListAdd = new List<Task> { };
             Userinfo existInfoAdd = new Userinfo { };
 
-            using (StreamReader sr = new StreamReader(GlobalVar.filePath))
+            using (StreamReader sr = new StreamReader(GlobalVal.filePath))
             {
                 var json = sr.ReadToEnd();
                 JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
@@ -222,7 +222,7 @@ namespace TasTrack
             };
 
             var updateJson = JsonConvert.SerializeObject(addList, Formatting.Indented);
-            using (StreamWriter writer = new StreamWriter(GlobalVar.filePath))
+            using (StreamWriter writer = new StreamWriter(GlobalVal.filePath))
             {
                 writer.WriteLine(updateJson);
             }
@@ -230,7 +230,7 @@ namespace TasTrack
             {
                 menuPrinter.PrintTitle();
                 menuPrinter.PrintMenu();
-                GlobalVar.errorNumber = -1;
+                GlobalVal.errorNumber = -1;
                 Console.Write("Would you like to add another task? Y/N: ");
                 string addMore = Console.ReadLine().ToLower();
                 if (addMore == "y" || addMore == "yes")
@@ -239,14 +239,14 @@ namespace TasTrack
                 }
                 if (addMore == "n" || addMore == "no")
                 {
-                    GlobalVar.isAddTask = false;
-                    GlobalVar.taskList = true;
+                    GlobalVal.addTask = false;
+                    GlobalVal.taskList = true;
                     var start = new MainLoop();
                     start.Main();
                 }
                 else
                 {
-                    GlobalVar.errorNumber = 1;
+                    GlobalVal.errorNumber = 1;
                 }
             }
         }

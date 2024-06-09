@@ -13,32 +13,32 @@ public class MainLoop
 {
     public void Main()
     {
-        GlobalVar globVar = new GlobalVar();
-        if (!Directory.Exists(GlobalVar.profiles))
+        GlobalVal globVar = new GlobalVal();
+        if (!Directory.Exists(GlobalVal.profiles))
         {
-            Directory.CreateDirectory(GlobalVar.profiles);
+            Directory.CreateDirectory(GlobalVal.profiles);
         }
-        while (GlobalVar.isLoggedIn == false)
+        while (GlobalVal.isLoggedIn == false)
         {
             var login = new Login();
         }
-        while (GlobalVar.isLoggedIn == true && GlobalVar.calView == false && GlobalVar.taskList == false && GlobalVar.isAddTask == false && GlobalVar.isRemvTask == false)
+        while (GlobalVal.isLoggedIn == true && GlobalVal.calView == false && GlobalVal.taskList == false && GlobalVal.addTask == false && GlobalVal.remvTask == false)
         {
             var menu = new MainMenu();
         }
-        while (GlobalVar.calView == true)
+        while (GlobalVal.calView == true)
         {
             var calendarPrinter = new CalendarMenu();
         }
-        while (GlobalVar.taskList == true)
+        while (GlobalVal.taskList == true)
         {
             var taskView = new TasksMenu();
         }
-        while (GlobalVar.isAddTask == true)
+        while (GlobalVal.addTask == true)
         {
             var taskAdd = new TaskAdd();
         }
-        while (GlobalVar.isRemvTask == true)
+        while (GlobalVal.remvTask == true)
         {
             var taskRemv = new TaskRemove();
         }

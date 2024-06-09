@@ -14,7 +14,6 @@ namespace TasTrack
         public string menuText;
         public string optionChoice;
         public string mainMenuSum;
-        public List<string> showTasks = new List<string>();
         public Printer()
         {
             title = "\n   ______  ______  _____  ___________  ___  _____  _   __" +
@@ -40,9 +39,9 @@ namespace TasTrack
             Console.Clear();
             Console.WriteLine(title);
             Console.WriteLine("\n");
-            if (GlobalVar.isLoggedIn == true)
+            if (GlobalVal.isLoggedIn == true)
             {
-                Console.WriteLine("User: " + GlobalVar.displayName);
+                Console.WriteLine("User: " + GlobalVal.displayName);
             }
             if (oopsyDesc != null)
             {
@@ -53,24 +52,23 @@ namespace TasTrack
         }
         public void PrintMenu()
         {
-            Console.WriteLine();
             Console.WriteLine(menuText);
             Console.WriteLine();
         }
-        public void PrintTasks()
+        public void PrintTasks(List<string> printTasks)
         {
-            GlobalVar globalVar = new GlobalVar();
+            GlobalVal globalVar = new GlobalVal();
             int columnWidth = globalVar.screenWidth;
             string output = null;
             int totalChars = 0;
-            if (showTasks.Count() > 0)
+            if (printTasks.Count() > 0)
             {
-                for (int i = 0; i < showTasks.Count(); i++) 
+                for (int i = 0; i < printTasks.Count(); i++) 
                 {
-                    totalChars += showTasks[i].Length;
+                    totalChars += printTasks[i].Length;
                     if (totalChars < columnWidth) 
                     {
-                        output += (showTasks[i]);
+                        output += (printTasks[i]);
                     }
                     else
                     {
@@ -81,17 +79,6 @@ namespace TasTrack
                     }
                 }
                 Console.WriteLine(output);
-                //string column = string.Join("; ", showTasks.ToArray());
-                //while (true)
-                //{
-                //    string col = new string(column.Skip<char>(loopCount * columnWidth).Take<char>(columnWidth).ToArray()).PadRight(columnWidth); 
-                //    if (String.IsNullOrWhiteSpace(col))
-                //    {
-                //        break;
-                //    }
-                //    output.AppendFormat("{0}\n", col);
-                //    loopCount++;
-                //}
                 Console.WriteLine();
             }
         }
