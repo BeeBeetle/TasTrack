@@ -17,16 +17,33 @@ namespace TasTrack
         {
             var start = new MainLoop();
             Printer menuPrinter = new Printer();
-            menuPrinter.menuText = "1: Add Task\n2: Remove Task\n3: Previous Day\n4: Next Day\n5: Calendar Menu\n6: Return to Main Menu";
+            menuPrinter.menuText = "1: Add Task\n2: Remove Task\n3: Previous Day\n4: Next Day\n5: Find Task\n6: Calendar Menu\n7: Return to Main Menu";
+            if (!GlobalVal.noInput)
+            {
+                if (currentTasks.Count == null)
+                {
+                    GlobalVal.errorNumber = 3;
+                    GlobalVal.noInput = true;
+                    currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
+                }
+                else
+                {
+                    currentTasks = globalVal.SummonTasksByName(GlobalVal.taskName);
+                    GlobalVal.noInput = true;
+                }
+            }
+            else
+            {
+                currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
+            }
             if (GlobalVal.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
             if (GlobalVal.errorNumber == 2) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
-            if (GlobalVal.errorNumber == 3) { menuPrinter.oopsyDesc = ""; }
+            if (GlobalVal.errorNumber == 3) { menuPrinter.oopsyDesc = "I couldn't find that task anywhere. The name must be an exact match."; }
             if (GlobalVal.errorNumber == 4) { menuPrinter.oopsyDesc = "You gotta use a number, not a letter!"; }
             menuPrinter.PrintTitle();
             menuPrinter.PrintMenu();
             Console.WriteLine("Tasks for " + DateTime.Now.AddDays(GlobalVal.dayAdjust).ToString("D") + ":");
-            currentTasks = globalVal.SummonTasks(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
             menuPrinter.PrintTasks(currentTasks);
             menuPrinter.PrintChoice();
             int currentYear = int.Parse(globalVal.dayNumber[2]);
@@ -53,18 +70,26 @@ namespace TasTrack
                         GlobalVal.dayAdjust += 1;
                         break;
                     case 5:
-                        GlobalVal.dayAdjust = 0;
-                        GlobalVal.monthAdjust = 0;
-                        GlobalVal.yearAdjust = 0;
-                        GlobalVal.taskList = false;
-                        GlobalVal.calView = true;
-                        start.Main();
+                        GlobalVal.noInput = false;
+                        string input = null;
+                        Console.Write("Enter a tasks name: ");
+                        GlobalVal.taskName = globalVal.EscapeLoop(input);
                         break;
                     case 6:
                         GlobalVal.dayAdjust = 0;
                         GlobalVal.monthAdjust = 0;
                         GlobalVal.yearAdjust = 0;
                         GlobalVal.taskList = false;
+                        GlobalVal.calView = true;
+                        GlobalVal.noInput = true;
+                        start.Main();
+                        break;
+                    case 7:
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.taskList = false;
+                        GlobalVal.noInput = true;
                         start.Main();
                         break;
                     default:

@@ -17,17 +17,21 @@ namespace TasTrack
             var calendarMenu = new CalendarBuilder();
             Printer calendarPrinter = new Printer();
             string input = null; 
-            string[] monthDay = new DateTime(
-                int.Parse(globalVal.dayNumber[2]), 
-                int.Parse(globalVal.dayNumber[0]), 
-                int.Parse(globalVal.dayNumber[1])
+            string[] monthDay = new DateTime(     // This will set us up to make sure that we pull the current
+                int.Parse(globalVal.dayNumber[2]),// day as "January 1" or "August 15" based on the current values
+                int.Parse(globalVal.dayNumber[0]),// for the adjustment variables. This will automatically roll over
+                int.Parse(globalVal.dayNumber[1]) // so March 30th would turn into Feb 29th which turns into Jan 30th. 
                 ).AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).ToString("D").Replace(", ", ",").Split(",");
-            currentTasks = globalVal.SummonTasks(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).AddYears(GlobalVal.yearAdjust));
-            int year = int.Parse(globalVal.dayNumber[2]);// Pulls the year from DateTime
-            int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime
+            currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).AddYears(GlobalVal.yearAdjust));
+            int year = int.Parse(globalVal.dayNumber[2]);// Pulls the year from DateTime            The line above just sets our JSON reader to get the tasks for the current date
+            int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime          based on the current adjustment values
             int today = int.Parse(globalVal.dayNumber[1]);// Pulls the day number from DateTime
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            calendarPrinter.menuText = "1: Select a day\n2: Previous Month\n3: Next Month\n4: Tasks Menu\n5: Return to Main Menu";
+            calendarPrinter.menuText = "1: Select a day" +
+                                     "\n2: Previous Month" +
+                                     "\n3: Next Month" +
+                                     "\n4: Tasks Menu" +
+                                     "\n5: Return to Main Menu";
             if (GlobalVal.errorNumber == 0) { calendarPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { calendarPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
             if (GlobalVal.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }

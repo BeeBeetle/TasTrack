@@ -10,33 +10,64 @@ namespace TasTrack
 {
     public class GlobalVal
     {
-        public List<string> SummonTasks(DateTime selectedDay)
-        {
+        public List<string> SummonTasksByDate(DateTime selectedDay)
+        {// The default way to populate a list of tasks that need to be displayed, this gets them by date and sorts them by time
             List<Task> currentTasks = new List<Task> { };
             int count;
             string addTask;
             List<string> taskSummon = new List<string>();
             using (StreamReader sr = new StreamReader(filePath))
-            {
+            {// Pull all the data from the JSON for the logged in user
                 var json = sr.ReadToEnd();
                 JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
                 if (desrlzdjson.TaskList != null)
                 {
                     count = desrlzdjson.TaskList.Count;
                     for (int i = 0; i < count; i++)
-                    {
+                    {// Get all our tasks and loop through all of them selecting the ones according to the currently chosen date (should be todays date by default)
                         if (desrlzdjson.TaskList[i].TaskDue.Date == selectedDay)
+                        {// Add them to a list
+                            currentTasks.Add(desrlzdjson.TaskList[i]);
+                        }
+                    }
+                }
+            }// Next we sort our tasks by date and time (but really just by time because we know they are all due on the same day from above)
+            currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.CompareTo(y.TaskDue); });
+            count = currentTasks.Count;
+            for (int i = 0; i < count; i++)
+            {// Loop them and add them to our return value in order
+                addTask = currentTasks[i].TaskName + " - " + currentTasks[i].TaskDue.ToString("D") + "; ";
+                taskSummon.Add(addTask);
+            }
+            return taskSummon;
+        }
+        public List<string> SummonTasksByName(string taskName)
+        {// Pull all the data from the JSON for the logged in user
+            List<Task> currentTasks = new List<Task> { };
+            int count;
+            string addTask;
+            List<string> taskSummon = new List<string>();
+            using (StreamReader sr = new StreamReader(filePath))
+            {// Get all our tasks and loop through all of them selecting the ones according to the name entered by the user using EscapeLoop()
+                var json = sr.ReadToEnd();
+                JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
+                if (desrlzdjson.TaskList != null)
+                {
+                    count = desrlzdjson.TaskList.Count;
+                    for (int i = 0; i < count; i++)
+                    {// Get every task from the JSON that matches and put them all in a list
+                        if (desrlzdjson.TaskList[i].TaskName == taskName)
                         {
                             currentTasks.Add(desrlzdjson.TaskList[i]);
                         }
                     }
                 }
-            }
-            currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.ToShortDateString().CompareTo(y.TaskDue.ToShortDateString()); });
+            }// Just in case we still sort our tasks by date and time in case there are more than one with the same name
+            currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.CompareTo(y.TaskDue); });
             count = currentTasks.Count;
             for (int i = 0; i < count; i++)
-            {
-                addTask = currentTasks[i].TaskName + ", " + currentTasks[i].TaskDue.ToString("D");
+            {// Loop through our list and send our tasks to the return value               
+                addTask = currentTasks[i].TaskName + " - " + currentTasks[i].TaskDue.ToString("D") + ", ";
                 taskSummon.Add(addTask);
             }
             return taskSummon;
@@ -82,6 +113,21 @@ namespace TasTrack
             }
             return input;
         }
+
+        public void DateRollover()
+        {
+            if (int.Parse(dayNumber[0]) + GlobalVal.monthAdjust > 12)
+            {
+                GlobalVal.yearAdjust += 1;
+                GlobalVal.monthAdjust = (int.Parse(dayNumber[0]) - (int.Parse(dayNumber[0]) * 2)) + 1;
+            }
+            if (int.Parse(dayNumber[0]) + GlobalVal.monthAdjust < 1)
+            {
+                GlobalVal.yearAdjust -= 1;
+                GlobalVal.monthAdjust = 12 - int.Parse(dayNumber[0]);
+            }
+        }
+
         //Below are a list of variables I need for the login page
         //All of these can be used outside this class as well using the public var
         private static bool loginStatus = false;
@@ -150,6 +196,20 @@ namespace TasTrack
             //This tracks the errors for the login page, there are only 3
             get { return userError; }
             set { userError = value; }
+        }
+
+        private static bool inputBool = true;
+        public static bool noInput
+        {
+            get { return inputBool; }
+            set { inputBool = value; }
+        }
+
+        private static string isTaskName = null;
+        public static string taskName
+        {
+            get { return isTaskName; }
+            set { isTaskName = value; }
         }
 
         public string date = DateTime.Now.ToString("D");//The date and time right NOW

@@ -12,16 +12,7 @@ namespace TasTrack
         public string Create()
         {
             StringBuilder output = new StringBuilder();
-            if (int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust > 12)
-            {
-                GlobalVal.yearAdjust += 1;
-                GlobalVal.monthAdjust = (int.Parse(globalVal.dayNumber[0]) - (int.Parse(globalVal.dayNumber[0]) * 2)) + 1;
-            }
-            if (int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust < 1)
-            {
-                GlobalVal.yearAdjust -= 1;
-                GlobalVal.monthAdjust = 12 - int.Parse(globalVal.dayNumber[0]);
-            }
+            globalVal.DateRollover();// This will ensure that if we get to the end/start of a year that we will roll over instead of going out of bounds
             int year = int.Parse(globalVal.dayNumber[2]) + GlobalVal.yearAdjust;// Pulls the year from DateTime
             int month = int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust;// Pulls the month from DateTime
             var startDate = new DateTime(year, month, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
