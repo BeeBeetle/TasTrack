@@ -11,7 +11,7 @@ namespace TasTrack
 {
     public class Login
     {
-        GlobalVal globalVar = new GlobalVal();
+        GlobalVal globalVal = new GlobalVal();
         Printer loginPrinter = new Printer();
         public Login()
         {
@@ -29,11 +29,12 @@ namespace TasTrack
             {
                 GlobalVal.errorNumber = -1;
                 int select = Convert.ToInt32(Console.ReadLine());
+                string input = null;
                 switch (select)
                 {
                     case 1:
                         Console.Write("Username: ");
-                        string usernameInput = Console.ReadLine();// Our username which is part of the file name for easy finding!
+                        string usernameInput = globalVal.EscapeLoop(input);// Our username which is part of the file name for easy finding!
                         GlobalVal.displayName = usernameInput;// Will be used later on other menus, just listing who is logged in
                         GlobalVal.filePath = profiles + usernameInput + "Profile.json";// See! right there in the file name! Plus now its here for later
                         string filename = GlobalVal.filePath.Split('\\').Last();
@@ -54,7 +55,7 @@ namespace TasTrack
                                 GlobalVal.errorNumber = 1;
                                 break;
                             }
-                            Console.Write("Password: ");
+                            Console.Write("\nPassword: ");
                             while (true)
                             {
                                 var key = Console.ReadKey(true);

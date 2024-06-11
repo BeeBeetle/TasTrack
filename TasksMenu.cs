@@ -12,30 +12,29 @@ namespace TasTrack
     internal class TasksMenu
     {
         GlobalVal globalVal = new GlobalVal();
-        List<string> currentTasks = new List<string> { };
         public TasksMenu()
         {
             var start = new MainLoop();
             Printer menuPrinter = new Printer();
-            menuPrinter.menuText = "1: Add Task\n2: Remove Task\n3: Previous Day\n4: Next Day\n5: Find Task\n6: Calendar Menu\n7: Return to Main Menu";
+            menuPrinter.menuText = "1: Add Task\n2: Modify a Listed Task\n3: Previous Day\n4: Next Day\n5: Find Task\n6: Calendar Menu\n7: Return to Main Menu";
             if (!GlobalVal.noInput)
-            {
-                if (currentTasks.Count == null)
-                {
+            {// This catches if there was input in the search by name option
+                if (GlobalVal.currentTasks.Count == null)
+                {// If no input was entered then we want to return an error saying you gotta do a name
                     GlobalVal.errorNumber = 3;
                     GlobalVal.noInput = true;
-                    currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
+                    GlobalVal.currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
                 }
                 else
-                {
-                    currentTasks = globalVal.SummonTasksByName(GlobalVal.taskName);
+                {// If we entered some text and it is found then return all matches
+                    GlobalVal.currentTasks = globalVal.SummonTasksByName(GlobalVal.taskName);
                     GlobalVal.noInput = true;
-                }
+                }// If there is no match then the output will be empty and trigger the if statment
             }
             else
-            {
-                currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
-            }
+            {// If there is no input we just do the days (for instance the first time we come to the page)
+                GlobalVal.currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
+            }// Right now once you load the find days and get a hit it's stuck like that and you have to do next day --> previous day to return to the original menu
             if (GlobalVal.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
             if (GlobalVal.errorNumber == 2) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
@@ -44,7 +43,7 @@ namespace TasTrack
             menuPrinter.PrintTitle();
             menuPrinter.PrintMenu();
             Console.WriteLine("Tasks for " + DateTime.Now.AddDays(GlobalVal.dayAdjust).ToString("D") + ":");
-            menuPrinter.PrintTasks(currentTasks);
+            menuPrinter.PrintTasks(GlobalVal.currentTasks);
             menuPrinter.PrintChoice();
             int currentYear = int.Parse(globalVal.dayNumber[2]);
             int today = int.Parse(globalVal.dayNumber[1]);
@@ -63,19 +62,19 @@ namespace TasTrack
                         GlobalVal.taskList = false;
                         GlobalVal.remvTask = true;
                         break;
-                    case 3:
+                    case 3:// Simple enough to page through days, this one is for the previous day
                         GlobalVal.dayAdjust -= 1;
                         break;
-                    case 4:
+                    case 4:// And this one takes us to the next day
                         GlobalVal.dayAdjust += 1;
                         break;
-                    case 5:
+                    case 5:// We want to try and find a task by name with this plus the if statement at the start
                         GlobalVal.noInput = false;
                         string input = null;
                         Console.Write("Enter a tasks name: ");
                         GlobalVal.taskName = globalVal.EscapeLoop(input);
                         break;
-                    case 6:
+                    case 6:// Reset our bools and bring us back to the calendar screen
                         GlobalVal.dayAdjust = 0;
                         GlobalVal.monthAdjust = 0;
                         GlobalVal.yearAdjust = 0;
@@ -84,7 +83,7 @@ namespace TasTrack
                         GlobalVal.noInput = true;
                         start.Main();
                         break;
-                    case 7:
+                    case 7:// This will negate the task menu and take us all the way back to the main menu
                         GlobalVal.dayAdjust = 0;
                         GlobalVal.monthAdjust = 0;
                         GlobalVal.yearAdjust = 0;

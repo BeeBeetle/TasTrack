@@ -11,7 +11,7 @@ namespace TasTrack
     internal class CalendarMenu
     {
         GlobalVal globalVal = new GlobalVal();
-        List<string> currentTasks = new List<string> { };
+        List<Task> currentTasks = new List<Task> { };
         public CalendarMenu()
         {
             var calendarMenu = new CalendarBuilder();
@@ -21,13 +21,14 @@ namespace TasTrack
                 int.Parse(globalVal.dayNumber[2]),// day as "January 1" or "August 15" based on the current values
                 int.Parse(globalVal.dayNumber[0]),// for the adjustment variables. This will automatically roll over
                 int.Parse(globalVal.dayNumber[1]) // so March 30th would turn into Feb 29th which turns into Jan 30th. 
-                ).AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).ToString("D").Replace(", ", ",").Split(",");
-            currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).AddYears(GlobalVal.yearAdjust));
+                ).AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).ToString("D").Split(", ");
+            GlobalVal.currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).AddYears(GlobalVal.yearAdjust));
+            string printableTasks =String.Join(", ", globalVal.Task2String(GlobalVal.currentTasks).ToArray());
             int year = int.Parse(globalVal.dayNumber[2]);// Pulls the year from DateTime            The line above just sets our JSON reader to get the tasks for the current date
             int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime          based on the current adjustment values
             int today = int.Parse(globalVal.dayNumber[1]);// Pulls the day number from DateTime
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            calendarPrinter.menuText = "1: Select a day" +
+            calendarPrinter.menuText = "1: Select a Date" +
                                      "\n2: Previous Month" +
                                      "\n3: Next Month" +
                                      "\n4: Tasks Menu" +
@@ -37,9 +38,13 @@ namespace TasTrack
             if (GlobalVal.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }
             if (GlobalVal.errorNumber == 3) { calendarPrinter.oopsyDesc = "Your passwords do not match. Please try again."; }
             if (GlobalVal.errorNumber == 4) { calendarPrinter.oopsyDesc = "You gotta enter a number before you can continue!"; }
-            if (GlobalVal.errorNumber == 5) { calendarPrinter.oopsyDesc = "That day is outside of this month silly!"; }
+            if (GlobalVal.errorNumber == 5) { calendarPrinter.oopsyDesc = "Oops! I don't recognize that date! Did you include the slashes?"; }
+            if (GlobalVal.errorNumber == 6) { calendarPrinter.oopsyDesc = "That year is outside of my scope."; }
+            if (GlobalVal.errorNumber == 7) { calendarPrinter.oopsyDesc = "I don't think thats a month . . ."; }
+            if (GlobalVal.errorNumber == 8) { calendarPrinter.oopsyDesc = "You entered a day that doesn't exist in the month you chose."; }
             calendarPrinter.PrintTitle();
-            Console.WriteLine(calendarMenu.Format(calendarMenu.Create(), monthDay[1] + ": " + String.Join(',', currentTasks.ToArray())));
+            currentTasks.ToArray();
+            Console.WriteLine(calendarMenu.Format(calendarMenu.Create(), monthDay[1] + ": " + printableTasks));
             calendarPrinter.PrintMenu();
             calendarPrinter.PrintChoice();
             try
@@ -49,16 +54,61 @@ namespace TasTrack
                 switch (select)
                 {
                     case 1:
-                        int output = 0;
-                        Console.Write("Select a day by number: ");
-                        try { output = int.Parse(globalVal.EscapeLoop(input)); }
-                        catch { GlobalVal.errorNumber = 2; }
-                        if (output > daysInMonth || output < daysInMonth)
+                        int[] thirtyDay = { 4, 6, 9, 11 };
+                        int[] thirtyoneDay = { 1, 3, 5, 7, 8, 10, 12 };
+                        int y;
+                        int m;
+                        int d;
+                        Console.Write("Please enter a date as MM/DD/YYYY: ");
+                        string dateInput = globalVal.EscapeLoop(input);
+                        string[] dateOutput = dateInput.Split('/'); ;// We split the date because we need the parts as numbers
+                        if (dateInput != null)
+                        {// Lets make sure that the date is theoretically valid and has a month day and year entered
+                            try
+                            {
+                                y = int.Parse(dateOutput[2]);
+                                m = int.Parse(dateOutput[0]);
+                                d = int.Parse(dateOutput[1]);
+                            }
+                            catch
+                            {
+                                GlobalVal.errorNumber = 5;
+                                break;
+                            }
+                        }
+                        y = int.Parse(dateOutput[2]);
+                        m = int.Parse(dateOutput[0]);
+                        d = int.Parse(dateOutput[1]);
+                        if (y > 9999 || y < 0)
                         {
-                            GlobalVal.errorNumber = 5;
+                            GlobalVal.errorNumber = 6;
                             break;
                         }
-                        GlobalVal.dayAdjust = output - int.Parse(globalVal.dayNumber[1]);
+                        if (m > 13 || m < 0)
+                        {// I split the month/year validity checks because I want two different error messages
+                            GlobalVal.errorNumber = 7;
+                            break;
+                        }
+                        else
+                        {// If the year is good and the month is good then we can move on to checking if day entered is valid
+                            if (thirtyDay.Contains(m) && d > 30 || thirtyoneDay.Contains(m) && d > 31)
+                            {
+                                GlobalVal.errorNumber = 8;
+                                break;
+                            }
+                            if (m == 2)
+                            {
+                                bool leapYear = DateTime.IsLeapYear(y);// Easy leap year check
+                                if (!leapYear && d > 28 || leapYear && d > 29)
+                                {
+                                    GlobalVal.errorNumber = 8;
+                                    break;
+                                }
+                            }
+                        }
+                        GlobalVal.yearAdjust = y - year;
+                        GlobalVal.monthAdjust = m - month;
+                        GlobalVal.dayAdjust = d - today;
                         break;
                     case 2:
                         GlobalVal.monthAdjust -= 1;

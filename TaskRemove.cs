@@ -10,32 +10,26 @@ namespace TasTrack
     internal class TaskRemove
     {
         GlobalVal globalVal = new GlobalVal();
-        List<string> currentTasks = new List<string> { };
-        int count;
-        string addTask;
         public TaskRemove()
         {
             Printer menuPrinter = new Printer();
-            menuPrinter.menuText = "Follow the steps to add a task:";
+            menuPrinter.menuText = "Press escape at any time to return to the Task Menu." +
+                                 "\nIf the task you want to change isn't in the list below return to the Task Menu." +
+                                 "\nOtherwise follow the steps to edit a task";
             if (GlobalVal.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
-            if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
-            
+            if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Your repsponse needs to be a number corresponding to a task in the list."; }
+            List<Task> allTasks = globalVal.SummonTasks();            
             menuPrinter.PrintTitle();
             menuPrinter.PrintMenu();
             Console.WriteLine("Tasks for " + DateTime.Now.AddDays(GlobalVal.dayAdjust).ToString("D") + ":");
-            currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
-            menuPrinter.PrintTasks(currentTasks);
-            menuPrinter.PrintChoice();
-            int currentYear = int.Parse(globalVal.dayNumber[2]);
-            int today = int.Parse(globalVal.dayNumber[1]);
-            //have a day switching mechanic
-            //one to leaf through
-            //one to pick a date by entering it
-            //users can select a task at any time (by number with the display value of the task name)
-            //2 choices: modify task, delete task
-            //if delete confirm the choice (permanence message)
-            //if modify 3 choices: change name, change due date, change desc.(when added)
+            menuPrinter.PrintTasks(GlobalVal.currentTasks);
+            string input = null;
+            string respone = globalVal.EscapeLoop(input);
 
+            if (respone != null)
+            { 
+                
+            }
         }
     }
 }

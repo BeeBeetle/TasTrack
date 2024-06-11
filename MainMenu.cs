@@ -37,6 +37,9 @@ namespace TasTrack
                         GlobalVal.taskList = true;
                         break;
                     case 3:
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
                         GlobalVal.isLoggedIn = false;
                         GlobalVal.displayName = null;
                         var start = new MainLoop();

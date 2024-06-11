@@ -10,12 +10,25 @@ namespace TasTrack
 {
     public class GlobalVal
     {
-        public List<string> SummonTasksByDate(DateTime selectedDay)
+        public List<Task> SummonTasks()
+        {// Here we are just getting all tasks for any instance in which we may need to search them ALL with code
+            List<Task> allTasks = new List<Task> { };
+            int count;
+            using (StreamReader sr = new StreamReader(filePath))
+            {// Pull all the data from the JSON for the logged in user
+                var json = sr.ReadToEnd();
+                JSONClass desrlzdjson = JsonConvert.DeserializeObject<JSONClass>(json);
+                if (desrlzdjson.TaskList != null)
+                {
+                    allTasks = desrlzdjson.TaskList;
+                }
+                return allTasks;
+            }
+        }
+        public List<Task> SummonTasksByDate(DateTime selectedDay)
         {// The default way to populate a list of tasks that need to be displayed, this gets them by date and sorts them by time
             List<Task> currentTasks = new List<Task> { };
             int count;
-            string addTask;
-            List<string> taskSummon = new List<string>();
             using (StreamReader sr = new StreamReader(filePath))
             {// Pull all the data from the JSON for the logged in user
                 var json = sr.ReadToEnd();
@@ -32,20 +45,12 @@ namespace TasTrack
                     }
                 }
             }// Next we sort our tasks by date and time (but really just by time because we know they are all due on the same day from above)
-            currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.CompareTo(y.TaskDue); });
-            count = currentTasks.Count;
-            for (int i = 0; i < count; i++)
-            {// Loop them and add them to our return value in order
-                addTask = currentTasks[i].TaskName + " - " + currentTasks[i].TaskDue.ToString("D") + "; ";
-                taskSummon.Add(addTask);
-            }
-            return taskSummon;
+            currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.CompareTo(y.TaskDue); });            
+            return currentTasks;
         }
-        public List<string> SummonTasksByName(string taskName)
+        public List<Task> SummonTasksByName(string taskName)
         {// Pull all the data from the JSON for the logged in user
-            List<Task> currentTasks = new List<Task> { };
             int count;
-            string addTask;
             List<string> taskSummon = new List<string>();
             using (StreamReader sr = new StreamReader(filePath))
             {// Get all our tasks and loop through all of them selecting the ones according to the name entered by the user using EscapeLoop()
@@ -64,10 +69,17 @@ namespace TasTrack
                 }
             }// Just in case we still sort our tasks by date and time in case there are more than one with the same name
             currentTasks.Sort(delegate (Task x, Task y) { return x.TaskDue.Date.CompareTo(y.TaskDue); });
-            count = currentTasks.Count;
+            return currentTasks;
+        }
+        public List<string> Task2String(List<Task> tasks)
+        {
+            int count;
+            string addTask;
+            List<string> taskSummon = new List<string>();
+            count = tasks.Count;
             for (int i = 0; i < count; i++)
             {// Loop through our list and send our tasks to the return value               
-                addTask = currentTasks[i].TaskName + " - " + currentTasks[i].TaskDue.ToString("D") + ", ";
+                addTask = tasks[i].TaskName + " - " + tasks[i].TaskDue.ToString("D") + "; ";
                 taskSummon.Add(addTask);
             }
             return taskSummon;
@@ -100,10 +112,24 @@ namespace TasTrack
                 }
                 if (key.Key == ConsoleKey.Escape)
                 {
-                    GlobalVal.remvTask = false;
-                    GlobalVal.taskList = true;
-                    start.Main();
-                    break;
+                    if (!isLoggedIn)
+                    {
+                        start.Main();
+                        break;
+                    }
+                    if (calView)
+                    {
+                        start.Main();
+                        break;
+                    }
+                    else
+                    {
+                        GlobalVal.remvTask = false;
+                        GlobalVal.addTask = false;
+                        GlobalVal.taskList = true;
+                        start.Main();
+                        break;
+                    }
                 }
                 else//if (key.Key != ConsoleKey.Escape || key.Key == ConsoleKey.Enter || key.Key != ConsoleKey.Backspace)
                 {
@@ -113,7 +139,6 @@ namespace TasTrack
             }
             return input;
         }
-
         public void DateRollover()
         {
             if (int.Parse(dayNumber[0]) + GlobalVal.monthAdjust > 12)
@@ -237,6 +262,13 @@ namespace TasTrack
         {
             get { return yearAdjustment; }
             set { yearAdjustment = value; }
+        }
+
+        private static List<Task> chosenTasks = new List<Task> { }; 
+        public static List<Task> currentTasks
+        {
+            get { return chosenTasks; }
+            set { chosenTasks = value; }
         }
 
         public int screenWidth = Console.WindowWidth - 1;//Listed as a number of columns, each column is the width of one constant width character

@@ -55,27 +55,48 @@ namespace TasTrack
             Console.WriteLine(menuText);
             Console.WriteLine();
         }
-        public void PrintTasks(List<string> printTasks)
+        public void PrintTasks(List<Task> input)
         {
             GlobalVal globalVar = new GlobalVal();
             int columnWidth = globalVar.screenWidth;
             string output = null;
             int totalChars = 0;
-            if (printTasks.Count() > 0)
+            input.ToList();
+            if (input.Count() > 0)
             {
-                for (int i = 0; i < printTasks.Count(); i++) 
+                for (int i = 0; i < input.Count(); i++)
                 {
-                    totalChars += printTasks[i].Length;
-                    if (totalChars < columnWidth) 
-                    {
-                        output += (printTasks[i]);
+                    string task = input[i].TaskName + " - " + input[i].TaskDue.ToString("D") + "; ";
+                    if (!GlobalVal.remvTask)
+                    { 
+                        totalChars += task.Length;
+                        if (totalChars < columnWidth)
+                        {
+                            output += task;
+                        }
+                        else
+                        {
+                            Console.WriteLine(output);
+                            totalChars = 0;
+                            i--;
+                            output = null;
+                        }
                     }
-                    else
+                    if (GlobalVal.remvTask)
                     {
-                        Console.WriteLine(output);
-                        totalChars = 0;
-                        i--;
-                        output = null;
+                        totalChars += task.Length;
+                        if (totalChars < columnWidth)
+                        {
+                            output += task;
+                        }
+                        else
+                        {
+                            Console.WriteLine(output);
+                            totalChars = 0;
+                            i--;
+                            output = null;
+                        }
+
                     }
                 }
                 Console.WriteLine(output);

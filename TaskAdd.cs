@@ -9,7 +9,7 @@ namespace TasTrack
 {
     internal class TaskAdd
     {
-        GlobalVal globalVar = new GlobalVal();
+        GlobalVal globalVal = new GlobalVal();
         public TaskAdd()
         {
             Printer menuPrinter = new Printer();
@@ -43,13 +43,13 @@ namespace TasTrack
                         menuPrinter.PrintMenu();
                         GlobalVal.errorNumber = -1;
                         Console.Write("What do you want to name this task?: ");
-                        addTask.TaskName = globalVar.EscapeLoop(input);
+                        addTask.TaskName = globalVal.EscapeLoop(input);
                         Console.Write("\nDo you want to name your task ");
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(addTask.TaskName);
                         Console.ResetColor();
                         Console.Write("? Y/N: ");
-                        string response = globalVar.EscapeLoop(input).ToLower();
+                        string response = globalVal.EscapeLoop(input).ToLower();
                         if (response == "y" || response == "yes")
                         {
                             continue;
@@ -73,7 +73,7 @@ namespace TasTrack
                         GlobalVal.errorNumber = -1;
                         Console.WriteLine("What date should this be completed by?");
                         Console.Write("Please enter a date as MM/DD/YYYY: ");
-                        string dateInput = globalVar.EscapeLoop(input);
+                        string dateInput = globalVal.EscapeLoop(input);
                         string[] dateOutput = dateInput.Split('/'); ;// We split the date because we need the parts as numbers
                         if (dateInput != null)
                         {// Lets make sure that the date is theoretically valid and has a month day and year entered
@@ -107,28 +107,16 @@ namespace TasTrack
                         }
                         else
                         {// If the year is good and the month is good then we can move on to checking if day entered is valid
-                            if (thirtyDay.Contains(month) && day > 30)
-                            {// Thirty days has september, april, june, and november
-                                GlobalVal.errorNumber = 3;
-                                breakpoint = 1;
-                                break;
-                            }
-                            if (thirtyoneDay.Contains(month) && day > 31)
-                            {// All the rest have 31
+                            if (thirtyDay.Contains(month) && day > 30 || thirtyoneDay.Contains(month) && day > 31)
+                            {// Thirty days has September, April, June, and November. All the rest have 31,
                                 GlobalVal.errorNumber = 3;
                                 breakpoint = 1;
                                 break;
                             }
                             if (month == 2)
                             {// 'cept february, but leap years give it one!
-                                bool leapYear = DateTime.IsLeapYear(year);// Easy leap year check for a leap year
-                                if (!leapYear && day > 28)
-                                {
-                                    GlobalVal.errorNumber = 3;
-                                    breakpoint = 1;
-                                    break;
-                                }
-                                if (leapYear && day > 29)
+                                bool leapYear = DateTime.IsLeapYear(year);// Easy leap year check
+                                if (!leapYear && day > 28 || leapYear && day > 29)
                                 {
                                     GlobalVal.errorNumber = 3;
                                     breakpoint = 1;
@@ -143,11 +131,11 @@ namespace TasTrack
                         menuPrinter.PrintMenu();
                         GlobalVal.errorNumber = -1;
                         Console.Write("\nWould you like to specify a time? Y/N: ");
-                        string response = globalVar.EscapeLoop(input).ToLower();
+                        string response = globalVal.EscapeLoop(input).ToLower();
                         if (response == "y" || response == "yes")
                         {
                             Console.Write("Using the 24 clock (11pm is 23/12am is 0) please enter a time as HH:MM?: ");
-                            string hourInput = globalVar.EscapeLoop(input);
+                            string hourInput = globalVal.EscapeLoop(input);
                             string[] hourOutput = hourInput.Split(':');
                             try
                             {
