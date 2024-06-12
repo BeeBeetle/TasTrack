@@ -15,7 +15,6 @@ namespace TasTrack
         {
             Printer menuPrinter = new Printer();
             menuPrinter.menuText = "1: Calendar\n2: View Tasks\n3: Logout";
-            menuPrinter.mainMenuSum = "Upcomming tasks\n";
             if (GlobalVal.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "That profile doesn't exist."; }
             if (GlobalVal.errorNumber == 2) { menuPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }

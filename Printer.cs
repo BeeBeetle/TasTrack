@@ -100,11 +100,11 @@ namespace TasTrack
                     }
                 }
                 Console.WriteLine(output);
-                Console.WriteLine();
             }
         }
         public void PrintChoice()
         {
+            Console.WriteLine();
             Console.Write(optionChoice);
         }
     }

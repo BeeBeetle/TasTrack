@@ -223,8 +223,8 @@ namespace TasTrack
             set { userError = value; }
         }
 
-        private static bool inputBool = true;
-        public static bool noInput
+        private static bool inputBool = false;
+        public static bool Input
         {
             get { return inputBool; }
             set { inputBool = value; }

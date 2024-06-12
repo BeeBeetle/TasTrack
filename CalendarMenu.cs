@@ -28,11 +28,11 @@ namespace TasTrack
             int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime          based on the current adjustment values
             int today = int.Parse(globalVal.dayNumber[1]);// Pulls the day number from DateTime
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            calendarPrinter.menuText = "1: Select a Date" +
-                                     "\n2: Previous Month" +
-                                     "\n3: Next Month" +
-                                     "\n4: Tasks Menu" +
-                                     "\n5: Return to Main Menu";
+            calendarPrinter.menuText = "1: Return to Main Menu" +
+                                     "\n2: Tasks Menu" +
+                                     "\n3: Select a Date" +
+                                     "\n4: Previous Month" +
+                                     "\n5: Next Month";
             if (GlobalVal.errorNumber == 0) { calendarPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { calendarPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
             if (GlobalVal.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }
@@ -54,6 +54,21 @@ namespace TasTrack
                 switch (select)
                 {
                     case 1:
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.calView = false;
+                        var start = new MainLoop();
+                        start.Main();
+                        break;
+                    case 2:
+                        GlobalVal.dayAdjust = 0;
+                        GlobalVal.monthAdjust = 0;
+                        GlobalVal.yearAdjust = 0;
+                        GlobalVal.calView = false;
+                        GlobalVal.taskList = true;
+                        break;
+                    case 3:
                         int[] thirtyDay = { 4, 6, 9, 11 };
                         int[] thirtyoneDay = { 1, 3, 5, 7, 8, 10, 12 };
                         int y;
@@ -110,26 +125,11 @@ namespace TasTrack
                         GlobalVal.monthAdjust = m - month;
                         GlobalVal.dayAdjust = d - today;
                         break;
-                    case 2:
+                    case 4:
                         GlobalVal.monthAdjust -= 1;
                         break;
-                    case 3:
-                        GlobalVal.monthAdjust += 1;
-                        break;
-                    case 4:
-                        GlobalVal.dayAdjust = 0;
-                        GlobalVal.monthAdjust = 0;
-                        GlobalVal.yearAdjust = 0;
-                        GlobalVal.calView = false;
-                        GlobalVal.taskList = true;
-                        break;
                     case 5:
-                        GlobalVal.dayAdjust = 0;
-                        GlobalVal.monthAdjust = 0;
-                        GlobalVal.yearAdjust = 0;
-                        GlobalVal.calView = false;
-                        var start = new MainLoop();
-                        start.Main();
+                        GlobalVal.monthAdjust += 1;
                         break;
                     default:
                         GlobalVal.errorNumber = 0;
