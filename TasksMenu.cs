@@ -12,9 +12,9 @@ namespace TasTrack
     internal class TasksMenu
     {
         GlobalVal globalVal = new GlobalVal();
+        MainLoop start = new MainLoop();
         public TasksMenu()
         {
-            var start = new MainLoop();
             Printer menuPrinter = new Printer();
             bool find = false;
             if (GlobalVal.Input)
@@ -24,7 +24,7 @@ namespace TasTrack
                     GlobalVal.errorNumber = 3;
                     GlobalVal.Input = false;
                     GlobalVal.currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
-                    menuPrinter.menuText = "1: Return to Main Menu\n2: Calendar Menu\n3: Add Task\n4: Modify a Listed Task\n5: Reset\n6: Previous Day\n7: Next Day";
+                    menuPrinter.menuText = "1: Return to Main Menu\n2: Calendar Menu\n3: Add Task\n4: Modify a Listed Task\n5: Find Task\n6: Previous Day\n7: Next Day";
                 }
                 else
                 {// If we entered some text and it is found then return all matches
@@ -36,7 +36,7 @@ namespace TasTrack
             else
             {// If there is no input we just do the days (for instance the first time we come to the page)
                 GlobalVal.currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust));
-                menuPrinter.menuText = "1: Return to Main Menu\n2: Calendar Menu\n3: Add Task\n4: Modify a Listed Task\n5: Reset\n6: Previous Day\n7: Next Day";
+                menuPrinter.menuText = "1: Return to Main Menu\n2: Calendar Menu\n3: Add Task\n4: Modify a Listed Task\n5: Find Task\n6: Previous Day\n7: Next Day";
             }// Right now once you load the find days and get a hit it's stuck like that and you have to do next day --> previous day to return to the original menu
             if (GlobalVal.errorNumber == 0) { menuPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
@@ -55,7 +55,6 @@ namespace TasTrack
             }
             menuPrinter.PrintTasks(GlobalVal.currentTasks);
             menuPrinter.PrintChoice();
-            GlobalVal.currentTasks.Clear();
             int currentYear = int.Parse(globalVal.dayNumber[2]);
             int today = int.Parse(globalVal.dayNumber[1]);
 
@@ -93,6 +92,7 @@ namespace TasTrack
                     case 5:// We want to try and find a task by name with this plus the if statement at the start
                         if (!find)
                         {
+                            GlobalVal.currentTasks.Clear();
                             GlobalVal.Input = true;
                             string input = null;
                             Console.Write("Enter a tasks name: ");

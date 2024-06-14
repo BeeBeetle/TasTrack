@@ -79,7 +79,7 @@ namespace TasTrack
             count = tasks.Count;
             for (int i = 0; i < count; i++)
             {// Loop through our list and send our tasks to the return value               
-                addTask = tasks[i].TaskName + " - " + tasks[i].TaskDue.ToString("D") + "; ";
+                addTask = tasks[i].TaskName + " - " + tasks[i].TaskDue.ToString("g") + "; ";
                 taskSummon.Add(addTask);
             }
             return taskSummon;
@@ -264,7 +264,7 @@ namespace TasTrack
             set { yearAdjustment = value; }
         }
 
-        private static List<Task> chosenTasks = new List<Task> { }; 
+        private static List<Task> chosenTasks; 
         public static List<Task> currentTasks
         {
             get { return chosenTasks; }

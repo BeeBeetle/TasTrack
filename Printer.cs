@@ -66,7 +66,7 @@ namespace TasTrack
             {
                 for (int i = 0; i < input.Count(); i++)
                 {
-                    string task = input[i].TaskName + " - " + input[i].TaskDue.ToString("D") + "; ";
+                    string task = (i+1) + ": " + input[i].TaskName + " - " + input[i].TaskDue.ToString("g") + "; ";
                     if (!GlobalVal.remvTask)
                     { 
                         totalChars += task.Length;

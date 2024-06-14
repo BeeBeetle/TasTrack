@@ -24,6 +24,8 @@ namespace TasTrack
             int[] thirtyoneDay = { 1, 3, 5, 7, 8, 10, 12 };
             int breakpoint = 0;
             bool addingTask = true;
+            string input = null;
+            string response = null;
             while (addingTask)
             {
                 if (GlobalVal.errorNumber == 1) { menuPrinter.oopsyDesc = "Your repsponse needs to be a yes or no, a Y or N"; }
@@ -34,22 +36,35 @@ namespace TasTrack
                 if (GlobalVal.errorNumber == 6) { menuPrinter.oopsyDesc = "I don't think thats a month . . ."; }
                 if (GlobalVal.errorNumber == 7) { menuPrinter.oopsyDesc = "There are only 24 hours in a day, 0 - 23."; }
                 if (GlobalVal.errorNumber == 8) { menuPrinter.oopsyDesc = "That's the wrong amount of minutes!"; }
-                for (int i = breakpoint; i < 3; i++)
+                for (int b = breakpoint; b < 4; b++)
                 {
-                    string input = null;
-                    if (i == 0)
+                    if (b == 0)
                     {// We first need the task name
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
-                        GlobalVal.errorNumber = -1;
-                        Console.Write("What do you want to name this task?: ");
-                        addTask.TaskName = globalVal.EscapeLoop(input);
-                        Console.Write("\nDo you want to name your task ");
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(addTask.TaskName);
-                        Console.ResetColor();
-                        Console.Write("? Y/N: ");
-                        string response = globalVal.EscapeLoop(input).ToLower();
+                        if (GlobalVal.errorNumber == 1)
+                        {
+                            GlobalVal.errorNumber = -1;
+                            Console.Write("\nDo you want to name your task ");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(addTask.TaskName);
+                            Console.ResetColor();
+                            Console.Write("? Y/N: ");
+                            GlobalVal.errorNumber = -1;
+                            response = globalVal.EscapeLoop(input).ToLower();
+                        }
+                        else
+                        {
+                            GlobalVal.errorNumber = -1;
+                            Console.Write("What do you want to name this task?: ");
+                            addTask.TaskName = globalVal.EscapeLoop(input);
+                            Console.Write("\nDo you want to name your task ");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(addTask.TaskName);
+                            Console.ResetColor();
+                            Console.Write("? Y/N: ");
+                            response = globalVal.EscapeLoop(input).ToLower();
+                        }
                         if (response == "y" || response == "yes")
                         {
                             continue;
@@ -66,7 +81,7 @@ namespace TasTrack
                             break;
                         }
                     }
-                    if (i == 1)
+                    if (b == 1)
                     {// We also need a date the task is due
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
@@ -79,9 +94,9 @@ namespace TasTrack
                         {// Lets make sure that the date is theoretically valid and has a month day and year entered
                             try
                             {
-                                year = int.Parse(dateOutput[2]);
-                                month = int.Parse(dateOutput[0]);
-                                day = int.Parse(dateOutput[1]);
+                                int.Parse(dateOutput[2]);
+                                int.Parse(dateOutput[0]);
+                                int.Parse(dateOutput[1]);
                             }
                             catch
                             {
@@ -125,13 +140,22 @@ namespace TasTrack
                             }
                         }
                     }
-                    if (i == 2)
+                    if (b == 2)
                     {
                         menuPrinter.PrintTitle();
                         menuPrinter.PrintMenu();
-                        GlobalVal.errorNumber = -1;
-                        Console.Write("\nWould you like to specify a time? Y/N: ");
-                        string response = globalVal.EscapeLoop(input).ToLower();
+                        if (GlobalVal.errorNumber == 4 || GlobalVal.errorNumber == 7 || GlobalVal.errorNumber == 8)
+                        {
+                            GlobalVal.errorNumber = -1;
+                            response = "y";
+                        }
+                        else
+                        {
+                            GlobalVal.errorNumber = -1;
+                            Console.Write("Would you like to specify a time? Y/N: ");
+                            response = globalVal.EscapeLoop(input).ToLower();
+                            Console.WriteLine();
+                        }
                         if (response == "y" || response == "yes")
                         {
                             Console.Write("Using the 24 clock (11pm is 23/12am is 0) please enter a time as HH:MM?: ");
@@ -139,8 +163,8 @@ namespace TasTrack
                             string[] hourOutput = hourInput.Split(':');
                             try
                             {
-                                hour = int.Parse(hourOutput[0]);
-                                minute = int.Parse(hourOutput[1]);
+                                int.Parse(hourOutput[0]);
+                                int.Parse(hourOutput[1]);
                             }
                             catch
                             {
@@ -154,7 +178,7 @@ namespace TasTrack
                             {
                                 GlobalVal.errorNumber = 7;
                                 breakpoint = 2;
-                            }    
+                            }
                             if (minute < 0 || minute > 59)
                             {
                                 GlobalVal.errorNumber = 8;
@@ -162,15 +186,13 @@ namespace TasTrack
                             }
                             else
                             {
-                                addingTask = false;
-                                break;
+                                continue;
                             }
                         }
                         if (response == "n" || response == "no")
                         {
                             hour = 00;
                             minute = 00;
-                            addingTask = false;
                         }
                         else
                         {
@@ -179,11 +201,36 @@ namespace TasTrack
                             break;
                         }
                     }
+                    addTask.TaskDue = new DateTime(year, month, day, hour, minute, 0);
+                    addTask.TaskCreate = DateTime.Now;
+                    if (b == 3)
+                    {
+                        menuPrinter.PrintTitle();
+                        menuPrinter.PrintMenu();
+                        Console.WriteLine(addTask.TaskName + ", " + addTask.TaskDue.ToString("g"));
+                        Console.WriteLine("Would you like to add this task? Y/N: ");
+                        response = globalVal.EscapeLoop(input).ToLower();
+                        if (response == "y" || response == "yes")
+                        {
+                            addingTask = false;
+                            break;
+                        }
+                        if (response == "n" || response == "no")
+                        {
+                            breakpoint = 0;
+                            GlobalVal.errorNumber = -1;
+                            continue;
+                        }
+                        else
+                        {
+                            GlobalVal.errorNumber = 1;
+                            breakpoint = 3;
+                            break;
+                        }
+                    }                    
                 }
+                addTask.ID = IDMaker.Hash(addTask.TaskName);
             }
-            addTask.TaskDue = new DateTime(year, month, day, hour, minute, 0);
-            addTask.TaskCreate = DateTime.Now;
-
             List<Task> existListAdd = new List<Task> { };
             Userinfo existInfoAdd = new Userinfo { };
 

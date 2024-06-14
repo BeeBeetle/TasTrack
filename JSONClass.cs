@@ -18,6 +18,7 @@ namespace TasTrack
         public string TaskName { get; set; }
         public DateTime TaskDue { get; set; }
         public DateTime TaskCreate { get; set; }
+        public string ID { get; set; }
     }
     public class Userinfo
     {

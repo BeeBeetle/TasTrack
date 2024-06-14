@@ -28,11 +28,7 @@ namespace TasTrack
             int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime          based on the current adjustment values
             int today = int.Parse(globalVal.dayNumber[1]);// Pulls the day number from DateTime
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            calendarPrinter.menuText = "1: Return to Main Menu" +
-                                     "\n2: Tasks Menu" +
-                                     "\n3: Select a Date" +
-                                     "\n4: Previous Month" +
-                                     "\n5: Next Month";
+            calendarPrinter.menuText = "1: Return to Main Menu\n2: Tasks Menu\n3: Select a Date\n4: Previous Month\n5: Next Month";
             if (GlobalVal.errorNumber == 0) { calendarPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { calendarPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
             if (GlobalVal.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }
