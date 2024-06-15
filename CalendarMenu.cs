@@ -23,16 +23,16 @@ namespace TasTrack
                 int.Parse(globalVal.dayNumber[1]) // so March 30th would turn into Feb 29th which turns into Jan 30th. 
                 ).AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).ToString("D").Split(", ");
             GlobalVal.currentTasks = globalVal.SummonTasksByDate(globalVal.selectedDay.AddDays(GlobalVal.dayAdjust).AddMonths(GlobalVal.monthAdjust).AddYears(GlobalVal.yearAdjust));
-            string printableTasks =String.Join(", ", globalVal.Task2String(GlobalVal.currentTasks).ToArray());
+            string printableTasks =String.Join("", globalVal.Task2String(GlobalVal.currentTasks).ToArray());
             int year = int.Parse(globalVal.dayNumber[2]);// Pulls the year from DateTime            The line above just sets our JSON reader to get the tasks for the current date
             int month = int.Parse(globalVal.dayNumber[0]);// Pulls the month from DateTime          based on the current adjustment values
             int today = int.Parse(globalVal.dayNumber[1]);// Pulls the day number from DateTime
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            calendarPrinter.menuText = "1: Return to Main Menu\n2: Tasks Menu\n3: Select a Date\n4: Previous Month\n5: Next Month";
+            calendarPrinter.menuText = "1: Return to Main Menu\n2: Tasks Menu\n3: Pick a Day\n4: Enter a Date\n5: Previous Month\n6: Next Month";
             if (GlobalVal.errorNumber == 0) { calendarPrinter.oopsyDesc = "Oops! Please select a valid option."; }
             if (GlobalVal.errorNumber == 1) { calendarPrinter.oopsyDesc = "Oops! You can't do that yet!"; }
             if (GlobalVal.errorNumber == 2) { calendarPrinter.oopsyDesc = "I'm sorry, the information you entered was invalid."; }
-            if (GlobalVal.errorNumber == 3) { calendarPrinter.oopsyDesc = "Your passwords do not match. Please try again."; }
+            if (GlobalVal.errorNumber == 3) { calendarPrinter.oopsyDesc = "That wasn't a number! I need the day as a number."; }
             if (GlobalVal.errorNumber == 4) { calendarPrinter.oopsyDesc = "You gotta enter a number before you can continue!"; }
             if (GlobalVal.errorNumber == 5) { calendarPrinter.oopsyDesc = "Oops! I don't recognize that date! Did you include the slashes?"; }
             if (GlobalVal.errorNumber == 6) { calendarPrinter.oopsyDesc = "That year is outside of my scope."; }
@@ -45,6 +45,11 @@ namespace TasTrack
             calendarPrinter.PrintChoice();
             try
             {
+                int[] thirtyDay = { 4, 6, 9, 11 };
+                int[] thirtyoneDay = { 1, 3, 5, 7, 8, 10, 12 };
+                int y;
+                int m;
+                int d;
                 int select = Convert.ToInt32(Console.ReadLine());
                 GlobalVal.errorNumber = -1;
                 switch (select)
@@ -65,27 +70,24 @@ namespace TasTrack
                         GlobalVal.taskList = true;
                         break;
                     case 3:
-                        int[] thirtyDay = { 4, 6, 9, 11 };
-                        int[] thirtyoneDay = { 1, 3, 5, 7, 8, 10, 12 };
-                        int y;
-                        int m;
-                        int d;
+                        Console.Write("Please enter a day as DD: ");
+                        string dayInput = globalVal.EscapeLoop(input);
+                        if (dayInput != null)
+                        {
+                            try { int.Parse(dayInput); }
+                            catch { GlobalVal.errorNumber = 3; break; }
+                        }
+                        d = int.Parse(dayInput);
+                        GlobalVal.dayAdjust = d - today;
+                        break;
+                    case 4:
                         Console.Write("Please enter a date as MM/DD/YYYY: ");
                         string dateInput = globalVal.EscapeLoop(input);
                         string[] dateOutput = dateInput.Split('/'); ;// We split the date because we need the parts as numbers
                         if (dateInput != null)
                         {// Lets make sure that the date is theoretically valid and has a month day and year entered
-                            try
-                            {
-                                y = int.Parse(dateOutput[2]);
-                                m = int.Parse(dateOutput[0]);
-                                d = int.Parse(dateOutput[1]);
-                            }
-                            catch
-                            {
-                                GlobalVal.errorNumber = 5;
-                                break;
-                            }
+                            try { int.Parse(dateOutput[2]); int.Parse(dateOutput[0]); int.Parse(dateOutput[1]); }
+                            catch { GlobalVal.errorNumber = 5; break; }
                         }
                         y = int.Parse(dateOutput[2]);
                         m = int.Parse(dateOutput[0]);
@@ -121,10 +123,10 @@ namespace TasTrack
                         GlobalVal.monthAdjust = m - month;
                         GlobalVal.dayAdjust = d - today;
                         break;
-                    case 4:
+                    case 5:
                         GlobalVal.monthAdjust -= 1;
                         break;
-                    case 5:
+                    case 6:
                         GlobalVal.monthAdjust += 1;
                         break;
                     default:

@@ -13,6 +13,7 @@ namespace TasTrack
         {
             StringBuilder output = new StringBuilder();
             globalVal.DateRollover();// This will ensure that if we get to the end/start of a year that we will roll over instead of going out of bounds
+            var allTasks = globalVal.SummonTasks();
             int year = int.Parse(globalVal.dayNumber[2]) + GlobalVal.yearAdjust;// Pulls the year from DateTime
             int month = int.Parse(globalVal.dayNumber[0]) + GlobalVal.monthAdjust;// Pulls the month from DateTime
             var startDate = new DateTime(year, month, 1).ToString("D").Replace(", ", " ").Split(" "); //0 = the day of the week the 1st was on
@@ -205,7 +206,16 @@ namespace TasTrack
                             }
                             if (waitTime == 0 && dayCount <= daysInMonth)
                             {// If we are done waiting we put the initial day and then increment the day, if we hit the number of days in the month we stop
-                                output.Append(dayCount.ToString("00") + ":" + "00"); // The second "00" will be a variable later for the number of tasks on that day
+                                int t = 0;
+                                DateTime currentDay = new DateTime(year, month, dayCount);
+                                foreach (Task task in allTasks)
+                                {
+                                    if (task.TaskDue.ToString("d") == currentDay.ToString("d"))
+                                    {
+                                        t++;
+                                    }
+                                }
+                                output.Append(dayCount.ToString("00") + "░" + t.ToString("00")); // The second "00" will be a variable later for the number of tasks on that day
                                 dayCount++;
                                 i += 4; // We do +4 here to keep the calendar spaced correctly because we are inserting 5 characters (a full block) all at once
                             }

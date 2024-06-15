@@ -239,7 +239,7 @@ namespace TasTrack
 
         public string date = DateTime.Now.ToString("D");//The date and time right NOW
         public int monthListNum = DateTime.Now.Month - 1;//Used to pull the month from an indexed list so 0 is January
-        public string[] dayNumber = DateTime.Now.ToShortDateString().Split('/');//index 0 = month, index 1 = day, index 2 = year
+        public string[] dayNumber = DateTime.Now.ToString("d").Split('/');//index 0 = month, index 1 = day, index 2 = year
         public string[] dateArray = DateTime.Now.ToString("D").Replace(", ", ",").Split(",");//Make the date an array to get just month, dd for display purposes
         public DateTime selectedDay = DateTime.Now.Date;
 
