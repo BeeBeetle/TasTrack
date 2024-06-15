@@ -1,6 +1,6 @@
 # TasTrack
 
-CURRENT VERSION 0.8.0
+CURRENT VERSION 0.8.1
 
  A C# Console App that can be used to track chores and tasks that you may need to do.
  To use this program you must have .NET Runtime 8.0.6 installed on your machine.
@@ -14,7 +14,8 @@ CURRENT VERSION 0.8.0
  2. Create user
  3. Open the main menu
  4. View calendar and tasks for the current day
-    - Page through months or select a specific date (only way to change days right now)
+    - Page through months
+    - Select a day in the current month or a full date as MM/DD/YYYY
     - Will show all tasks for selected date and should remember that date when changing menus
  5. Can view a task menu to page through tasks by day
     - Can also search for tasks by name, returning all matches
