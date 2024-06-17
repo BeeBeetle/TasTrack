@@ -24,3 +24,6 @@ CURRENT VERSION 0.8.1
  7. Edit task names/due dates and remove tasks
 
 That should comprise all major features, now it's just QoL changes
+
+P.S. The calendar loses appropriate track of what day is should be if you look at a date before 9/14/1752.
+P.P.S If you are from a Catholic country (by 16th century standards) the calendar has the same problem prior to 1582.
