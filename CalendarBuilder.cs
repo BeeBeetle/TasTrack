@@ -215,7 +215,7 @@ namespace TasTrack
                                         t++;
                                     }
                                 }
-                                output.Append(dayCount.ToString("00") + "░" + t.ToString("00")); // The second "00" will be a variable later for the number of tasks on that day
+                                output.Append(dayCount.ToString("00") + "•" + t.ToString("00")); // The second "00" will be a variable later for the number of tasks on that day
                                 dayCount++;
                                 i += 4; // We do +4 here to keep the calendar spaced correctly because we are inserting 5 characters (a full block) all at once
                             }

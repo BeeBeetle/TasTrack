@@ -13,6 +13,7 @@ public class MainLoop
 {
     public void Main()
     {
+        Console.OutputEncoding = Encoding.UTF8;
         GlobalVal globVar = new GlobalVal();
         if (!Directory.Exists(GlobalVal.profiles))
         {

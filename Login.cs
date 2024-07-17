@@ -103,7 +103,7 @@ namespace TasTrack
                         break;
                     case 2:
                         Console.Write("\nWhat is your name? ");
-                        string newUsername = Console.ReadLine();
+                        string newUsername = globalVal.EscapeLoop(input);
                         GlobalVal.filePath = profiles + newUsername + "Profile.json";
                         if (File.Exists(GlobalVal.filePath))
                         {// Just a check to see if a profile already exists, since we check logging in based on username if a user already exists with the name entered
@@ -114,7 +114,7 @@ namespace TasTrack
                         {
                             GlobalVal.displayName = newUsername;// Once again will be used later
                         }
-                        Console.Write("Please enter a good password: ");
+                        Console.Write("\nPlease enter a good password: ");
                         string newPasswordTry = null;
                         while (true)
                         {

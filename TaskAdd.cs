@@ -178,11 +178,13 @@ namespace TasTrack
                             {
                                 GlobalVal.errorNumber = 7;
                                 breakpoint = 2;
+                                break;
                             }
                             if (minute < 0 || minute > 59)
                             {
                                 GlobalVal.errorNumber = 8;
                                 breakpoint = 2;
+                                break;
                             }
                             else
                             {
@@ -261,27 +263,33 @@ namespace TasTrack
             {
                 writer.WriteLine(updateJson);
             }
-            if (!addingTask);
+            if (!addingTask)
             {
                 menuPrinter.PrintTitle();
                 menuPrinter.PrintMenu();
                 GlobalVal.errorNumber = -1;
                 Console.Write("Would you like to add another task? Y/N: ");
                 string addMore = Console.ReadLine().ToLower();
-                if (addMore == "y" || addMore == "yes")
+                while (true)
                 {
-                    addingTask = true;
-                }
-                if (addMore == "n" || addMore == "no")
-                {
-                    GlobalVal.addTask = false;
-                    GlobalVal.taskList = true;
-                    var start = new MainLoop();
-                    start.Main();
-                }
-                else
-                {
-                    GlobalVal.errorNumber = 1;
+                    if (addMore == "y" || addMore == "yes")
+                    {
+                        addingTask = true;
+                        break;
+                    }
+                    if (addMore == "n" || addMore == "no")
+                    {
+                        GlobalVal.addTask = false;
+                        GlobalVal.taskList = true;
+                        var start = new MainLoop();
+                        start.Main();
+                        break;
+                    }
+                    else
+                    {
+                        GlobalVal.errorNumber = 1;
+                        break;
+                    }
                 }
             }
         }
